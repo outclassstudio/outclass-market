@@ -10,12 +10,14 @@ export default function SMSLogIn() {
       </div>
       <form className="flex flex-col gap-3">
         <FormInput
+          name="number"
           type="number"
           placeholder="핸드폰 번호를 입력하세요"
           required={true}
           errors={["잘못된 입력입니다"]}
         />
         <FormInput
+          name="number"
           type="number"
           placeholder="Verification code"
           required={true}

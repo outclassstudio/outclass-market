@@ -11,24 +11,28 @@ export default function CreateAccount() {
       </div>
       <form className="flex flex-col gap-3">
         <FormInput
+          name="text"
           type="text"
           placeholder="아이디를 입력하세요"
           required={true}
           errors={["잘못된 입력입니다"]}
         />
         <FormInput
+          name="email"
           type="email"
           placeholder="이메일을 입력하세요"
           required={true}
           errors={["잘못된 입력입니다"]}
         />
         <FormInput
+          name="password"
           type="password"
           placeholder="비밀번호를 입력하세요"
           required={true}
           errors={["잘못된 입력입니다"]}
         />
         <FormInput
+          name="password"
           type="password"
           placeholder="비밀번호를 한번 더 입력하세요"
           required={true}
