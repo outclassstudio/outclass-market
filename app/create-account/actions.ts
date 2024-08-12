@@ -7,9 +7,8 @@ import {
 import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { getIronSession } from "iron-session";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import getSession from "@/lib/session";
 
 const passwordRegex = new RegExp(PASSWORD_REGEX);
 
@@ -25,30 +24,6 @@ const checkPassword = ({
   confirm_password: string;
 }) => password === confirm_password;
 
-const checkUniqueUsername = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      username,
-    },
-    select: {
-      id: true,
-    },
-  });
-  return !Boolean(user);
-};
-
-const checkUniqueEmail = async (email: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      email,
-    },
-    select: {
-      id: true,
-    },
-  });
-  return !Boolean(user);
-};
-
 const formSchema = z
   .object({
     username: z
@@ -60,17 +35,42 @@ const formSchema = z
       .max(10, "너무 길어요")
       .trim()
       .toLowerCase()
-      .refine(checkUsername, "potato는 안돼요")
-      .refine(checkUniqueUsername, "이미 존재하는 이름이에요"),
-    email: z
-      .string()
-      .email()
-      .trim()
-      .refine(checkUniqueEmail, "이미 존재하는 이메일이에요"),
+      .refine(checkUsername, "potato는 안돼요"),
+    email: z.string().email().trim(),
     password: z.string().min(PASSWORD_MIN_LENGTH),
     // .regex(passwordRegex, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
     // .regex(passwordRegex, PASSWORD_REGEX_ERROR),
+  })
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: { username },
+      select: { id: true },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "이미 존재하는 이름이에요",
+        path: ["username"],
+        fatal: true,
+      });
+    }
+    return z.NEVER;
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const user = await db.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "이미 존재하는 메일이에요",
+        path: ["email"],
+        fatal: true,
+      });
+    }
+    return z.NEVER;
   })
   .refine(checkPassword, {
     message: "비밀번호가 일치하지 않아요",
@@ -101,13 +101,9 @@ export const createAccount = async (prevState: any, formData: FormData) => {
         id: true,
       },
     });
-    const cookie = await getIronSession(cookies(), {
-      cookieName: "new-cookie",
-      password: process.env.COOKIE_PASSWORD!,
-    });
-    //@ts-ignore
-    cookie.id = user.id;
-    await cookie.save();
+    const session = await getSession();
+    session.id = user.id;
+    await session.save();
     redirect("/profile");
   }
 };
