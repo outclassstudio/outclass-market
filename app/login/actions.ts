@@ -8,8 +8,7 @@ import {
 import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import getSession from "@/lib/session";
-import { redirect } from "next/navigation";
+import { Login } from "@/lib/login";
 
 const passwordRegex = new RegExp(PASSWORD_REGEX);
 
@@ -68,10 +67,7 @@ export const login = async (prevState: any, formData: FormData) => {
       );
 
       if (checkHash) {
-        const session = await getSession();
-        session.id = user!.id;
-        await session.save();
-        redirect("profile");
+        await Login(user.id, "/profile");
       } else {
         return {
           fieldErrors: {
