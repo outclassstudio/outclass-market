@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { Login } from "@/lib/login";
+import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
 async function getAccessToken(code: string) {
@@ -73,7 +74,8 @@ export async function GET(request: NextRequest) {
     },
   });
   if (user) {
-    await Login(user.id, "/profile");
+    await Login(user.id);
+    redirect("/profile");
   }
 
   //todo 이미 존재하는 이메일입니다. : 기존 계정을 업데이트
@@ -90,5 +92,6 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  await Login(newUser.id, "/profile");
+  await Login(newUser.id);
+  redirect("/profile");
 }
