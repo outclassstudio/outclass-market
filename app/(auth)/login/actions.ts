@@ -9,6 +9,7 @@ import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { Login } from "@/lib/login";
+import { redirect } from "next/navigation";
 
 const passwordRegex = new RegExp(PASSWORD_REGEX);
 
@@ -67,7 +68,8 @@ export const login = async (prevState: any, formData: FormData) => {
       );
 
       if (checkHash) {
-        await Login(user.id, "/profile");
+        await Login(user.id);
+        redirect("/profile");
       } else {
         return {
           fieldErrors: {
