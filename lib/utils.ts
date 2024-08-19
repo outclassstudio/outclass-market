@@ -11,6 +11,9 @@ export function formatToTimeAgo(date: string): string {
     trans = Math.round(diff / dayInms);
     return formatter.format(trans, "days");
   } else {
+    if (Math.abs(diff / hourInms) < 1) {
+      return "방금전";
+    }
     trans = Math.round(diff / hourInms);
     return formatter.format(trans, "hours");
   }

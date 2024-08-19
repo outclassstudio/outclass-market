@@ -5,8 +5,6 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-// import { useActionState } from "react";
-// import { deleteProduct } from "./action";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -38,8 +36,6 @@ export default async function ProductDetail({
 }: {
   params: { id: string };
 }) {
-  // const [state, dispatch] = useActionState(deleteProduct, null);
-
   const id = Number(params.id);
   if (isNaN(id)) return notFound();
 
@@ -51,7 +47,12 @@ export default async function ProductDetail({
   return (
     <div className="h-screen">
       <div className="my-auto relative aspect-square">
-        <Image fill src={product.photo} alt={product.title} />
+        <Image
+          fill
+          src={product.photo}
+          alt={product.title}
+          className="object-cover"
+        />
       </div>
       <div className="p-5 flex items-center gap-3 border-b border-e-neutral-700">
         <div className="size-10 overflow-hidden rounded-full">
@@ -83,14 +84,13 @@ export default async function ProductDetail({
         </span>
         <div className="flex gap-3.5">
           {isOwner ? (
-            <form name="delete">
-              <button
-                className="bg-red-500 px-5 py-2.5 rounded-md 
+            <Link
+              href={`/products/delete/${product.id}`}
+              className="bg-red-500 px-5 py-2.5 rounded-md 
         text-white font-semibold"
-              >
-                삭제하기
-              </button>
-            </form>
+            >
+              삭제하기
+            </Link>
           ) : null}
           <Link
             className="bg-orange-500 px-5 py-2.5 rounded-md 
