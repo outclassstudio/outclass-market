@@ -1,25 +1,10 @@
 "use server";
 
-import { z } from "zod";
 import fs from "fs/promises";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
-
-const productSchema = z.object({
-  title: z.string({
-    required_error: "필수 항목이에요",
-  }),
-  price: z.coerce.number({
-    required_error: "필수 항목이에요",
-  }),
-  description: z.string({
-    required_error: "필수 항목이에요",
-  }),
-  photo: z.string({
-    required_error: "필수 항목이에요",
-  }),
-});
+import { productSchema } from "./schema";
 
 export async function uploadProduct(_: any, formData: FormData) {
   const data = {
