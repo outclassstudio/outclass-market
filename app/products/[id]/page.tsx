@@ -2,15 +2,16 @@ import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
+import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function getIsOwner(userId: number) {
-  const session = await getSession();
-  if (session.id) {
-    return session.id === userId;
-  }
+  // const session = await getSession();
+  // if (session.id) {
+  //   return session.id === userId;
+  // }
   return false;
 }
 
@@ -31,6 +32,17 @@ async function getProduct(id: number) {
   return product;
 }
 
+const getCashedProduct = nextCache(getProduct, ["product-detail"], {
+  tags: ["product-detail"],
+});
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const product = await getProduct(+params.id);
+  return {
+    title: product?.title,
+  };
+}
+
 export default async function ProductDetail({
   params,
 }: {
@@ -39,10 +51,15 @@ export default async function ProductDetail({
   const id = Number(params.id);
   if (isNaN(id)) return notFound();
 
-  const product = await getProduct(id);
+  const product = await getCashedProduct(id);
   if (!product) return notFound();
 
   const isOwner = await getIsOwner(product.userId);
+
+  const revalidate = async () => {
+    "use server";
+    revalidateTag("product-detail");
+  };
 
   return (
     <div className="h-screen">
@@ -103,4 +120,16 @@ export default async function ProductDetail({
       </div>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const products = await db.product.findMany({
+    select: {
+      id: true,
+    },
+  });
+
+  return products.map((product) => ({
+    id: product.id.toString(),
+  }));
 }
