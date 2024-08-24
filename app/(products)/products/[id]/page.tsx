@@ -8,10 +8,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function getIsOwner(userId: number) {
-  // const session = await getSession();
-  // if (session.id) {
-  //   return session.id === userId;
-  // }
+  const session = await getSession();
+  if (session.id) {
+    return session.id === userId;
+  }
   return false;
 }
 
@@ -101,13 +101,22 @@ export default async function ProductDetail({
         </span>
         <div className="flex gap-3.5">
           {isOwner ? (
-            <Link
-              href={`/products/delete/${product.id}`}
-              className="bg-red-500 px-5 py-2.5 rounded-md 
+            <>
+              <Link
+                href={`/delete/${product.id}`}
+                className="bg-red-500 px-5 py-2.5 rounded-md 
         text-white font-semibold"
-            >
-              삭제하기
-            </Link>
+              >
+                삭제하기
+              </Link>
+              <Link
+                href={`/delete/${product.id}`}
+                className="bg-orange-500 px-5 py-2.5 rounded-md 
+        text-white font-semibold"
+              >
+                수정하기
+              </Link>
+            </>
           ) : null}
           <Link
             className="bg-orange-500 px-5 py-2.5 rounded-md 

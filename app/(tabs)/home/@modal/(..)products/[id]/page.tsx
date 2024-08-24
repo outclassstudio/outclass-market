@@ -7,8 +7,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 async function getProduct(id: number) {
-  new Promise((resolove) => setTimeout(resolove, 5000));
-
   const result = await db.product.findUnique({
     where: {
       id,
