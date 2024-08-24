@@ -2,7 +2,7 @@ import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
-import { unstable_cache as nextCache, revalidateTag } from "next/cache";
+import { unstable_cache as nextCache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -33,7 +33,7 @@ async function getProduct(id: number) {
 }
 
 const getCashedProduct = nextCache(getProduct, ["product-detail"], {
-  tags: ["product-detail"],
+  tags: ["products"],
 });
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
@@ -56,62 +56,59 @@ export default async function ProductDetail({
 
   const isOwner = await getIsOwner(product.userId);
 
-  const revalidate = async () => {
-    "use server";
-    revalidateTag("product-detail");
-  };
-
   return (
-    <div className="h-screen">
-      <div className="my-auto relative aspect-square">
+    <div className="h-screen my-auto">
+      <div className="relative aspect-square">
         <Image
           fill
           src={product.photo}
           alt={product.title}
-          className="object-cover"
+          className="object-cover p-5"
         />
       </div>
-      <div className="p-5 flex items-center gap-3 border-b border-e-neutral-700">
-        <div className="size-10 overflow-hidden rounded-full">
-          {product.user.avatar ? (
-            <Image
-              width={40}
-              height={40}
-              src={product.user.avatar}
-              alt={product.user.username}
-            />
-          ) : (
-            <UserIcon />
-          )}
+      <div className="flex flex-col px-5 pb-[90px]">
+        <div className="pb-5 px-1.5 flex items-center gap-3 border-b border-e-neutral-700">
+          <div className="size-10 overflow-hidden rounded-full">
+            {product.user.avatar ? (
+              <Image
+                width={40}
+                height={40}
+                src={product.user.avatar}
+                alt={product.user.username}
+              />
+            ) : (
+              <UserIcon />
+            )}
+          </div>
+          <div>
+            <h3>{product.user.username}</h3>
+          </div>
         </div>
-        <div>
-          <h3>{product.user.username}</h3>
+        <div className="py-5 px-1.5">
+          <h1 className="text-2xl font-semibold">{product.title}</h1>
+          <p>{product.description}</p>
         </div>
-      </div>
-      <div className="p-5">
-        <h1 className="text-2xl font-semibold">{product.title}</h1>
-        <p>{product.description}</p>
       </div>
       <div
-        className="fixed left-0 bottom-0 w-full p-5 pb-10 bg-neutral-800 
+        className="fixed left-0 bottom-0 w-full p-5 bg-neutral-800 
       flex justify-between items-center"
       >
-        <span className="font-semibold text-xl">
+        <span className="font-semibold text-lg sm:text-xl">
           {formatToWon(product.price)}원
         </span>
-        <div className="flex gap-3.5">
+        <div className="flex gap-2 sm:gap-3.5">
           {isOwner ? (
             <>
               <Link
                 href={`/delete/${product.id}`}
-                className="bg-red-500 px-5 py-2.5 rounded-md 
+                className="bg-red-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
         text-white font-semibold"
               >
                 삭제하기
               </Link>
               <Link
-                href={`/delete/${product.id}`}
-                className="bg-orange-500 px-5 py-2.5 rounded-md 
+                href={`/edit/product/${product.id}`}
+                className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
         text-white font-semibold"
               >
                 수정하기
@@ -119,7 +116,7 @@ export default async function ProductDetail({
             </>
           ) : null}
           <Link
-            className="bg-orange-500 px-5 py-2.5 rounded-md 
+            className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
         text-white font-semibold"
             href={``}
           >

@@ -22,6 +22,7 @@ export async function uploadProduct(_: any, formData: FormData) {
     data.photo = `/${data.photo.name}`;
   }
 
+  //todo schema의 폴더를 변경할 필요가 있음
   const result = productSchema.safeParse(data);
   if (!result.success) {
     return result.error.flatten();
