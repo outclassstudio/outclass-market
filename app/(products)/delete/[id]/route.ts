@@ -1,9 +1,10 @@
 import db from "@/lib/db";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const params = request.nextUrl.pathname.split("/")[3];
+  const params = request.nextUrl.pathname.split("/")[2];
   if (!params) {
     return new Response(null, {
       status: 400,
@@ -20,6 +21,7 @@ export async function GET(request: NextRequest) {
   });
 
   if (result.id) {
-    redirect("/products");
+    revalidateTag("products");
+    redirect("/home");
   }
 }
