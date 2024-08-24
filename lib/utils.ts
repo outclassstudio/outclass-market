@@ -22,3 +22,7 @@ export function formatToTimeAgo(date: string): string {
 export function formatToWon(price: number): string {
   return price.toLocaleString("ko-KR");
 }
+
+export function convertToNumber(won: string): number {
+  return Number(won.split(",").join(""));
+}
