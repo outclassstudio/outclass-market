@@ -1,10 +1,5 @@
-import EditInput from "@/components/edit-input";
 import db from "@/lib/db";
-import { formatToWon } from "@/lib/utils";
-import { UserIcon } from "@heroicons/react/24/solid";
 import { unstable_cache as nextCache } from "next/cache";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import EditForm from "./edit-form";
 import { Prisma } from "@prisma/client";

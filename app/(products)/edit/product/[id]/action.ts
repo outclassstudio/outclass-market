@@ -5,7 +5,6 @@ import { revalidateTag } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import fs from "fs/promises";
 import { productSchema } from "@/app/(products)/add/schema";
-import { convertToNumber } from "@/lib/utils";
 
 export async function editProduct(prevState: any, formData: FormData) {
   const data = {

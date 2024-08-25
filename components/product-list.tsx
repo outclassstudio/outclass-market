@@ -55,7 +55,7 @@ export default function ProductList({ initialProducts }: ProductsProps) {
       {products.map((product) => (
         <ListProduct key={product.id} {...product} />
       ))}
-      {/* {isLastPage ? null : (
+      {isLastPage ? null : (
         <span
           ref={trigger}
           className="mb-40 ext-sm font-semibold bg-orange-500 w-fix mx-auto 
@@ -63,7 +63,7 @@ export default function ProductList({ initialProducts }: ProductsProps) {
         >
           {isLoading ? "로딩중" : "더 가져오기"}
         </span>
-      )} */}
+      )}
     </div>
   );
 }

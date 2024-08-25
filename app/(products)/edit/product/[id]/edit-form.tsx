@@ -1,10 +1,8 @@
 "use client";
 
 import EditInput from "@/components/edit-input";
-import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import Link from "next/link";
 import { EditProductType } from "./page";
 import { notFound } from "next/navigation";
 import { useFormState } from "react-dom";
@@ -24,14 +22,6 @@ export default function EditForm({
 
   return (
     <form action={dispatch} className="h-screen my-auto">
-      {/* <div className="relative aspect-square">
-        <Image
-          fill
-          src={product.photo}
-          alt={product.title}
-          className="object-cover p-5"
-        />
-      </div> */}
       <EditPhoto name="photo" url={product.photo} />
       <div className="flex flex-col px-5 pb-[90px]">
         <div className="pb-5 px-1.5 flex items-center gap-3 border-b border-e-neutral-700">
