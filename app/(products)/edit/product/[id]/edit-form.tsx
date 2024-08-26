@@ -1,13 +1,13 @@
 "use client";
 
-import EditInput from "@/components/edit-input";
+import EditInput from "@/components/edit/edit-input";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { EditProductType } from "./page";
 import { notFound } from "next/navigation";
 import { useFormState } from "react-dom";
 import { editProduct } from "./action";
-import EditPhoto from "@/components/edit-photo";
+import EditPhoto from "@/components/edit/edit-photo";
 
 export default function EditForm({
   product,

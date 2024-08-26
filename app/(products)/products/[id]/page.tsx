@@ -5,7 +5,8 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import { unstable_cache as nextCache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { createChatRoom } from "./action";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -55,6 +56,22 @@ export default async function ProductDetail({
   if (!product) return notFound();
 
   const isOwner = await getIsOwner(product.userId);
+
+  const createChatRoom = async () => {
+    "use server";
+    const session = await getSession();
+    const room = await db.chatRoom.create({
+      data: {
+        users: {
+          connect: [{ id: product.userId }, { id: session.id }],
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+    redirect(`/chats/${room.id}`);
+  };
 
   return (
     <div className="h-screen my-auto">
@@ -115,13 +132,14 @@ export default async function ProductDetail({
               </Link>
             </>
           ) : null}
-          <Link
-            className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
+          <form action={createChatRoom}>
+            <button
+              className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
         text-white font-semibold"
-            href={``}
-          >
-            채팅하기
-          </Link>
+            >
+              채팅하기
+            </button>
+          </form>
         </div>
       </div>
     </div>
