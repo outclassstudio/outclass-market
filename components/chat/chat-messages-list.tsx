@@ -1,11 +1,12 @@
 "use client";
 
+import { saveMessage } from "@/app/chats/[id]/actions";
 import { InitialMessages } from "@/app/chats/[id]/page";
 import { formatToTimeAgo } from "@/lib/utils";
 import { ArrowUpCircleIcon, UserIcon } from "@heroicons/react/24/solid";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, RealtimeChannel } from "@supabase/supabase-js";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SUPABASE_PUBLIC_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZGx0ZnR3Z2JkbnNwdmVwaW95Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQ2NjM2NjksImV4cCI6MjA0MDIzOTY2OX0.sS5aU00T5Q3noVU6-kzfoefm81JjS1PAh0CsH4VZ9Ks";
@@ -15,19 +16,24 @@ interface ChatMessagesListProps {
   initialMessages: InitialMessages;
   userId: number;
   chatRoomId: string;
+  username: string;
+  avatar?: string;
 }
 
 export default function ChatMessagesList({
   initialMessages,
   userId,
   chatRoomId,
+  username,
+  avatar,
 }: ChatMessagesListProps) {
   const [messages, setMessages] = useState(initialMessages);
   const [message, setMessage] = useState("");
+  const channel = useRef<RealtimeChannel>();
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessages((prevMsg) => [
       ...prevMsg,
@@ -42,16 +48,38 @@ export default function ChatMessagesList({
         },
       },
     ]);
+    await saveMessage(message, chatRoomId);
+    channel.current?.send({
+      type: "broadcast",
+      event: "message",
+      payload: {
+        id: Date.now(),
+        payload: message,
+        created_at: new Date(),
+        userId,
+        user: {
+          username,
+          avatar,
+        },
+      },
+    });
     setMessage("");
   };
 
   useEffect(() => {
     const client = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
-    const channel = client.channel(`room-${chatRoomId}`);
-    channel.on("broadcast", { event: "message" }, (payload) => {
-      console.log(payload);
-    });
-  }, []);
+    channel.current = client.channel(`room-${chatRoomId}`);
+    channel.current
+      .on("broadcast", { event: "message" }, (payload) => {
+        setMessages((prev) => [...prev, payload.payload]);
+      })
+      .subscribe();
+
+    // clean-up function
+    return () => {
+      channel.current?.unsubscribe();
+    };
+  }, [chatRoomId]);
 
   return (
     <div className="p-5 flex flex-col gap-5 min-h-screen justify-end">
