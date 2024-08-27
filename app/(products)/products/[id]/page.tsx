@@ -6,7 +6,7 @@ import { unstable_cache as nextCache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { createChatRoom } from "./action";
+import { createChatRoom } from "./actions";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
