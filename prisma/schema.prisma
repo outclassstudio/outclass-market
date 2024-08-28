@@ -22,8 +22,8 @@ model User {
   posts      Post[]
   comments   Comment[]
   likes      Like[]
-  ChatRoom   ChatRoom[]
-  Message    Message[]
+  chatRooms  ChatRoom[]
+  messages   Message[]
 }
 
 model SMSToken {
@@ -87,7 +87,7 @@ model ChatRoom {
   users      User[]
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
-  Message    Message[]
+  messages   Message[]
 }
 
 model Message {
