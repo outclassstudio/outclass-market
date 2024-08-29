@@ -11,7 +11,7 @@ interface SingleRoomProps {
     username: string;
     avatar: string | null;
   }[];
-  Message: {
+  messages: {
     created_at: Date;
     payload: string;
     chatRoomId: string;
@@ -22,11 +22,11 @@ interface SingleRoomProps {
 export default async function SingleRoom({
   id,
   users,
-  Message,
+  messages,
 }: SingleRoomProps) {
   const session = await getSession();
   const [avatarUser] = users.filter((user) => user.id !== session.id);
-  const [lastMessage] = Message.slice(-1);
+  const [lastMessage] = messages.slice(-1);
 
   return (
     <Link

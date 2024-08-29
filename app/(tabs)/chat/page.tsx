@@ -23,7 +23,7 @@ async function getChatRooms() {
           avatar: true,
         },
       },
-      Message: {
+      messages: {
         select: {
           payload: true,
           created_at: true,
