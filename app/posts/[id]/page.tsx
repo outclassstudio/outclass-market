@@ -4,6 +4,7 @@ import { formatToTimeAgo } from "@/lib/utils";
 import {
   EyeIcon,
   HandThumbUpIcon as HandThumbUpSolid,
+  UserIcon,
 } from "@heroicons/react/24/solid";
 import { HandThumbUpIcon as HandThumbUpOutline } from "@heroicons/react/24/outline";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
@@ -42,10 +43,11 @@ async function getPost(id: number) {
   }
 }
 
-const getCachedPost = nextCache(getPost, ["post-detail"], {
-  tags: ["post-detail"],
-  revalidate: 60,
-});
+//todo 고쳐야함
+// const getCachedPost = nextCache(getPost, ["post-detail"], {
+//   tags: ["post-detail"],
+//   revalidate: 60,
+// });
 
 async function getLikeStatus(postId: number, userId: number) {
   // const session = await getSession();
@@ -83,7 +85,7 @@ export default async function PostDetail({
   const id = Number(params.id);
   if (isNaN(id)) return notFound();
 
-  const post = await getCachedPost(id);
+  const post = await getPost(id);
   if (!post) return notFound;
 
   //todo 세션 반복 호출에 대한 고민과 대책
@@ -94,13 +96,18 @@ export default async function PostDetail({
   return (
     <div className="p-5 text-white">
       <div className="flex items-center gap-2 mb-2">
-        <Image
-          width={28}
-          height={28}
-          src={post.user.avatar!}
-          alt={post.user.username}
-          className="size-7 rounded-full"
-        />
+        {post.user.avatar ? (
+          <Image
+            width={28}
+            height={28}
+            src={post.user.avatar!}
+            alt={post.user.username}
+            className="size-7 rounded-full"
+          />
+        ) : (
+          <UserIcon className="size-7" />
+        )}
+
         <div>
           <span className="text-sm font-semibold">{post.user.username}</span>
           <div className="text-xs">
