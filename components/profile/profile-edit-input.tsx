@@ -2,13 +2,8 @@
 
 import { SaveProfile } from "@/app/(tabs)/profile/edit/actions";
 import { GetUserData } from "@/app/(tabs)/profile/edit/page";
-import {
-  CameraIcon,
-  ChevronLeftIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/solid";
+import { CameraIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import ProfileHeader from "./profile-header";
 
@@ -18,17 +13,28 @@ interface ProfileEditInputProps {
 
 export default function ProfileEditInput({ user }: ProfileEditInputProps) {
   const [username, setUsername] = useState(user?.username);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username) {
-      await SaveProfile(username);
+      if (username === user?.username) {
+        setErrors(["같은 닉네임이에요"]);
+      } else {
+        const result = await SaveProfile(username);
+        if (result) {
+          setErrors(result.formErrors);
+        }
+      }
+    } else {
+      setErrors(["빈칸이에요"]);
     }
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
+
   return (
     <form
       onSubmit={onSubmit}
@@ -68,6 +74,11 @@ export default function ProfileEditInput({ user }: ProfileEditInputProps) {
           className="w-full bg-transparent rounded-md ring-2 ring-neutral-500
     border-none outline-none focus:ring-2 focus:ring-neutral-400"
         />
+        {errors.map((error, index) => (
+          <span key={index} className="text-red-500 font-medium">
+            {error}
+          </span>
+        ))}
       </div>
     </form>
   );

@@ -6,7 +6,6 @@ import { unstable_cache as nextCache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { createChatRoom } from "./actions";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -60,17 +59,32 @@ export default async function ProductDetail({
   const createChatRoom = async () => {
     "use server";
     const session = await getSession();
-    const room = await db.chatRoom.create({
-      data: {
-        users: {
-          connect: [{ id: product.userId }, { id: session.id }],
-        },
+
+    const roomData = await db.user.findUnique({
+      where: {
+        id: session.id,
       },
-      select: {
-        id: true,
+      include: {
+        chatRooms: true,
       },
     });
-    redirect(`/chats/${room.id}`);
+
+    console.log(roomData);
+
+    roomData?.chatRooms.find((el) => product);
+
+    // const room = await db.chatRoom.create({
+    //   data: {
+    //     productId: product.id,
+    //     users: {
+    //       connect: [{ id: product.userId }, { id: session.id }],
+    //     },
+    //   },
+    //   select: {
+    //     id: true,
+    //   },
+    // });
+    // redirect(`/chats/${room.id}`);
   };
 
   return (
@@ -132,14 +146,16 @@ export default async function ProductDetail({
               </Link>
             </>
           ) : null}
-          <form action={createChatRoom}>
-            <button
-              className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
+          {isOwner ? null : (
+            <form action={createChatRoom}>
+              <button
+                className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
         text-white font-semibold"
-            >
-              채팅하기
-            </button>
-          </form>
+              >
+                채팅하기
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>

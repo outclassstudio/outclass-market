@@ -21,9 +21,6 @@ export default function PostList({ posts }: PostsListProps) {
           className="pb-5 mb-5 border-b border-neutral-500 text-neutral-400
           flex gap-5 last:pb-0 last:border-b-0 items-center"
         >
-          <div className="aspect-ratio border-2 p-4 border-neutral-500 border-dashed">
-            <PhotoIcon className="w-16" />
-          </div>
           <div className="flex flex-col gap-2 w-full">
             <h2 className="text-white text-xl font-semibold">{post.title}</h2>
             <p>{post.description}</p>
