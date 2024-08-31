@@ -31,6 +31,11 @@ async function getChatRooms() {
           userId: true,
         },
       },
+      product: {
+        select: {
+          id: true,
+        },
+      },
     },
     orderBy: {
       created_at: "desc",
@@ -45,7 +50,7 @@ export default async function Chats() {
   const chatRooms = await getChatRooms();
   if (!chatRooms) return notFound();
   return (
-    <div className="p-5">
+    <div className="p-2">
       <ChatRoomList chatRooms={chatRooms} />
     </div>
   );
