@@ -32,8 +32,8 @@ const formSchema = z
         invalid_type_error: "문자가 아니에요",
         required_error: "이름입력은 필수에요",
       })
-      .min(3, "너무 짧아요")
-      .max(10, "너무 길어요")
+      .min(3, "닉네임은 3글자 이상이어야 해요")
+      .max(10, "닉네임은 10글자 이하여야 해요")
       .trim()
       .toLowerCase()
       .refine(checkUsername, "potato는 안돼요"),

@@ -1,4 +1,5 @@
 import { formatToTimeAgo, formatToWon } from "@/lib/utils";
+import { HeartIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,16 +19,24 @@ export default function ListProduct({
   photo,
 }: ListProductProps) {
   return (
-    <Link href={`/products/${id}`} className="flex gap-5">
+    <Link
+      href={`/products/${id}`}
+      className="flex gap-5 pb-5 border-b border-neutral-700 
+      last:border-none w-full"
+    >
       <div className="relative size-28 rounded-md overflow-hidden">
         <Image fill src={photo} alt={title} className="object-cover" />
       </div>
-      <div className="flex flex-col gap-1 *:text-white">
-        <span className="text-lg">{title}</span>
-        <span className="text-sm text-neutral-500">
+      <div className="flex flex-col gap-1 w-[75%] *:text-white">
+        <div className="text-lg">{title}</div>
+        <div className="text-sm text-neutral-500">
           {formatToTimeAgo(created_at.toString())}
-        </span>
+        </div>
         <span className="text-lg font-semibold">{formatToWon(price)}원</span>
+        <div className="w-full flex justify-end items-center gap-1 *:text-neutral-400">
+          <HeartIcon className="size-4" />
+          <span>0</span>
+        </div>
       </div>
     </Link>
   );
