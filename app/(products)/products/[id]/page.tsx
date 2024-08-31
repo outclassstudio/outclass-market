@@ -27,6 +27,11 @@ async function getProduct(id: number) {
           avatar: true,
         },
       },
+      ChatRoom: {
+        include: {
+          users: true,
+        },
+      },
     },
   });
   return product;
@@ -51,40 +56,37 @@ export default async function ProductDetail({
   const id = Number(params.id);
   if (isNaN(id)) return notFound();
 
-  const product = await getCashedProduct(id);
+  // const product = await getCashedProduct(id);
+  const product = await getProduct(id);
   if (!product) return notFound();
 
   const isOwner = await getIsOwner(product.userId);
+
+  const session = await getSession();
+  const existRoom = product.ChatRoom.filter(
+    (room) => room.users[1].id === session.id
+  );
 
   const createChatRoom = async () => {
     "use server";
     const session = await getSession();
 
-    const roomData = await db.user.findUnique({
-      where: {
-        id: session.id,
-      },
-      include: {
-        chatRooms: true,
-      },
-    });
-
-    console.log(roomData);
-
-    roomData?.chatRooms.find((el) => product);
-
-    // const room = await db.chatRoom.create({
-    //   data: {
-    //     productId: product.id,
-    //     users: {
-    //       connect: [{ id: product.userId }, { id: session.id }],
-    //     },
-    //   },
-    //   select: {
-    //     id: true,
-    //   },
-    // });
-    // redirect(`/chats/${room.id}`);
+    if (existRoom.length) {
+      redirect(`/chats/${existRoom[0].id}`);
+    } else {
+      const room = await db.chatRoom.create({
+        data: {
+          productId: product.id,
+          users: {
+            connect: [{ id: product.userId }, { id: session.id }],
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+      redirect(`/chats/${room.id}`);
+    }
   };
 
   return (
@@ -149,6 +151,7 @@ export default async function ProductDetail({
           {isOwner ? null : (
             <form action={createChatRoom}>
               <button
+                // onClick={createChatRoom}
                 className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
         text-white font-semibold"
               >

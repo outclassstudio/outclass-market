@@ -1,3 +1,4 @@
+import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToTimeAgo } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
@@ -17,16 +18,34 @@ interface SingleRoomProps {
     chatRoomId: string;
     userId: number;
   }[];
+  product: {
+    id: number;
+  };
+}
+
+async function getProductInfo(id: number) {
+  const product = await db.product.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      title: true,
+    },
+  });
+  return product;
 }
 
 export default async function SingleRoom({
   id,
   users,
   messages,
+  product,
 }: SingleRoomProps) {
   const session = await getSession();
   const [avatarUser] = users.filter((user) => user.id !== session.id);
   const [lastMessage] = messages.slice(-1);
+  const productInfo = await getProductInfo(product.id);
 
   return (
     <Link
@@ -45,7 +64,6 @@ export default async function SingleRoom({
       ) : (
         <UserIcon className="size-10" />
       )}
-
       <div className="flex flex-col gap-1 text-lg">
         <div className="flex gap-3 items-end">
           {users.map((user, idx) => (
@@ -54,7 +72,15 @@ export default async function SingleRoom({
               {idx === users.length - 1 ? "" : ","}
             </span>
           ))}
-          <div className="text-xs text-neutral-500 flex pb-1">
+          {productInfo ? (
+            <div
+              // href={`/products/${productInfo.id}`}
+              className="text-sm text-neutral-400"
+            >
+              @ {productInfo.title}
+            </div>
+          ) : null}
+          <div className="text-xs text-neutral-500">
             {lastMessage
               ? formatToTimeAgo(lastMessage.created_at.toString())
               : ""}

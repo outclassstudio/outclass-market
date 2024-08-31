@@ -6,9 +6,6 @@ interface ChatRoomListProps {
 }
 
 export default function ChatRoomList({ chatRooms }: ChatRoomListProps) {
-  {
-    /* {room.users.filter((el) => el.id !== id)} */
-  }
   return (
     <div className="flex flex-col gap-2 text-neutral-300">
       {chatRooms.map((room) => (
