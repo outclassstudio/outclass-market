@@ -37,7 +37,7 @@ export default function LikeButton({
     <button
       onClick={onClick}
       className={`flex items-center gap-2 text-neutral-400
-    text-sm border border-neutral-400 rounded-full p-2
+    text-sm border border-neutral-400 rounded-full py-2 px-4
     ${
       state.isLiked
         ? "bg-orange-500 text-white border-orange-500"

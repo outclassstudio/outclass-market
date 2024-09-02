@@ -126,7 +126,8 @@ export default function ChatMessagesList({
           value={message}
           type="text"
           name="message"
-          placeholder="채팅을 입력하세요"
+          placeholder="채팅을 입력해주세요"
+          autoComplete="off"
           className="bg-transparent rounded-2xl w-full h-12 
           focus:outline-none px-5 ring-2 focus:ring-4 transition 
           ring-neutral-200 focus:ring-neutral-50  border-none 

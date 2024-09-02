@@ -47,6 +47,7 @@ async function getMessages(chatRoomId: string) {
   return messages;
 }
 
+//todo 공용으로
 async function getUserProfile() {
   const session = await getSession();
   const user = await db.user.findUnique({
