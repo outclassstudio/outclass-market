@@ -147,7 +147,7 @@ export default async function PostDetail({
   // };
 
   return (
-    <div className="text-white">
+    <div className="text-white px-5 sm:px-3">
       <div className="flex justify-between items-center w-full py-4">
         <div className="flex gap-3 items-center">
           <Link href="/life" className="text-white">

@@ -10,6 +10,11 @@ export async function getMoreProducts(page: number) {
       price: true,
       created_at: true,
       photo: true,
+      _count: {
+        select: {
+          ProductLike: true,
+        },
+      },
     },
     skip: page * 1,
     take: 1,

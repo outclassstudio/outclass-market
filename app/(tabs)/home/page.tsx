@@ -8,10 +8,10 @@ import Link from "next/link";
 //cache 사용 -> 함수는 return이 반드시 있어야 함
 const getCashedProducts = nextCache(getInitialProducts, ["home-products"], {
   tags: ["products"],
+  revalidate: 60,
 });
 
 async function getInitialProducts() {
-  console.log("hit");
   const products = await db.product.findMany({
     select: {
       id: true,
@@ -19,6 +19,11 @@ async function getInitialProducts() {
       price: true,
       created_at: true,
       photo: true,
+      _count: {
+        select: {
+          ProductLike: true,
+        },
+      },
     },
     take: 1,
     orderBy: {
@@ -37,7 +42,9 @@ export const metadata = {
 };
 
 export default async function Products() {
+  //todo 캐싱전략 수정 필요
   const initialProducts = await getCashedProducts();
+  // const initialProducts = await getInitialProducts();
 
   return (
     <div>

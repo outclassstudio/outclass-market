@@ -1,7 +1,10 @@
+import ProductFootbar from "@/components/product/product-footbar";
+import ProductLikeButton from "@/components/product/product-like-button";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
+import { Prisma } from "@prisma/client";
 import { unstable_cache as nextCache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,14 +35,43 @@ async function getProduct(id: number) {
           users: true,
         },
       },
+      _count: {
+        select: {
+          ProductLike: true,
+        },
+      },
     },
   });
   return product;
 }
 
+export type ProductType = Prisma.PromiseReturnType<typeof getProduct>;
+
+//todo 캐싱전략 고민
 const getCashedProduct = nextCache(getProduct, ["product-detail"], {
   tags: ["products"],
 });
+
+async function getLikeStatus(productId: number, userId: number) {
+  const isLiked = await db.productLike.findUnique({
+    where: {
+      id: {
+        productId,
+        userId,
+      },
+    },
+  });
+  return {
+    isLiked: Boolean(isLiked),
+  };
+}
+
+function getCachedLikeStatus(productId: number, userId: number) {
+  const getCached = nextCache(getLikeStatus, ["product-like-status"], {
+    tags: [`product-like-status-${productId}`],
+  });
+  return getCached(productId, userId);
+}
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getProduct(+params.id);
@@ -89,6 +121,8 @@ export default async function ProductDetail({
     }
   };
 
+  const { isLiked } = await getCachedLikeStatus(id, session.id!);
+
   return (
     <div className="h-screen my-auto">
       <div className="relative aspect-square">
@@ -121,46 +155,23 @@ export default async function ProductDetail({
           <h1 className="text-2xl font-semibold">{product.title}</h1>
           <p>{product.description}</p>
         </div>
-      </div>
-      <div
-        className="fixed left-0 bottom-0 w-full p-5 bg-neutral-800 
-      flex justify-between items-center"
-      >
-        <span className="font-semibold text-lg sm:text-xl">
-          {formatToWon(product.price)}원
-        </span>
-        <div className="flex gap-2 sm:gap-3.5">
-          {isOwner ? (
-            <>
-              <Link
-                href={`/delete/${product.id}`}
-                className="bg-red-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
-        text-white font-semibold"
-              >
-                삭제하기
-              </Link>
-              <Link
-                href={`/edit/product/${product.id}`}
-                className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
-        text-white font-semibold"
-              >
-                수정하기
-              </Link>
-            </>
-          ) : null}
-          {isOwner ? null : (
-            <form action={createChatRoom}>
-              <button
-                // onClick={createChatRoom}
-                className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
-        text-white font-semibold"
-              >
-                채팅하기
-              </button>
-            </form>
-          )}
+        <div className="flex gap-3">
+          <div className="flex gap-1 text-neutral-400 text-sm">
+            <span>채팅</span>
+            <span>{product.ChatRoom.length}</span>
+          </div>
+          <div className="flex gap-1 text-neutral-400 text-sm">
+            <span>관심</span>
+            <span>{product._count.ProductLike}</span>
+          </div>
         </div>
       </div>
+      <ProductFootbar
+        isLiked={isLiked}
+        product={product}
+        isOwner={isOwner}
+        createChatRoom={createChatRoom}
+      />
     </div>
   );
 }
