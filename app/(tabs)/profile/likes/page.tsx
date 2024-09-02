@@ -8,7 +8,11 @@ import { notFound } from "next/navigation";
 async function getInitialProducts(userId: number) {
   const products = await db.product.findMany({
     where: {
-      userId,
+      ProductLike: {
+        some: {
+          userId,
+        },
+      },
     },
     select: {
       id: true,
@@ -42,15 +46,7 @@ export default async function UserProducts() {
 
   return (
     <div>
-      <ProfileHeader title="나의 판매내역" />
-      {/* <div
-        className="flex w-full justify-center items-center pt-5 px-4 pb-4
-      *:w-1/2 *:text-center *:text-lg *:text-neutral-300 border-b border-neutral-600
-      mb-2"
-      >
-        <div>판매중</div>
-        <div>판매완료</div>
-      </div> */}
+      <ProfileHeader title="나의 관심목록" />
       {initialProducts ? (
         <ProductList initialProducts={initialProducts} />
       ) : (

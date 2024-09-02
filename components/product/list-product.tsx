@@ -9,6 +9,9 @@ interface ListProductProps {
   price: number;
   created_at: Date;
   photo: string;
+  _count: {
+    ProductLike: number;
+  };
 }
 
 export default function ListProduct({
@@ -17,6 +20,7 @@ export default function ListProduct({
   price,
   created_at,
   photo,
+  _count,
 }: ListProductProps) {
   return (
     <Link
@@ -35,7 +39,7 @@ export default function ListProduct({
         <span className="text-lg font-semibold">{formatToWon(price)}원</span>
         <div className="w-full flex justify-end items-center gap-1 *:text-neutral-400">
           <HeartIcon className="size-4" />
-          <span>0</span>
+          <span>{_count.ProductLike}</span>
         </div>
       </div>
     </Link>

@@ -18,7 +18,7 @@ async function getUser(id: number) {
       _count: {
         select: {
           products: true,
-          likes: true,
+          ProductLike: true,
         },
       },
     },
@@ -45,7 +45,7 @@ export default async function Profile() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-5 py-3">
+    <div className="flex flex-col justify-center items-center gap-5 p-3">
       <Suspense fallback={"Hello"}>
         <div className="flex items-center gap-3 p-2 w-full justify-start">
           {user?.avatar ? (
@@ -78,11 +78,11 @@ export default async function Profile() {
         <ChevronRightIcon className="size-10" />
       </Link>
       <Link
-        href={`/like/products/${user?.id}`}
+        href={`/profile/likes`}
         className="flex justify-between items-center p-3 w-full 
       border-b border-neutral-500 text-neutral-300 text-lg"
       >
-        <div>관심목록 {user?._count.likes}개</div>
+        <div>관심목록 {user?._count.ProductLike}개</div>
         <ChevronRightIcon className="size-10" />
       </Link>
       <form action={logOut} className="w-full">
