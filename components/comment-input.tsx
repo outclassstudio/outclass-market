@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 interface CommentInputProps {
   initialComments: InitialComments;
@@ -30,9 +30,22 @@ export default function CommentInput({
 }: CommentInputProps) {
   const [comments, setComments] = useState(initialComments);
   const [comment, setComment] = useState("");
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const textarea = useRef<HTMLTextAreaElement>(null);
+
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
+    const compare = Number(textarea!.current!.style.height.replace("px", ""));
+
+    if (!textarea!.current!.value) {
+      textarea!.current!.style.height = "40px";
+    }
+
+    if (compare < 70) {
+      textarea!.current!.style.height = "auto";
+      textarea!.current!.style.height = textarea!.current!.scrollHeight + "px";
+    }
   };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newId = comments[comments.length - 1].id + 1;
@@ -83,7 +96,7 @@ export default function CommentInput({
                 <HandThumbUpIcon className="size-4" />
                 <span>좋아요 {}</span>
               </span>
-              <span className="flex gap-1.5 items-center text-neutral-400">
+              <span className={`flex gap-1.5 items-center "text-neutral-400" `}>
                 <ChatBubbleOvalLeftIcon className="size-4" />
                 <span>답글쓰기 {}</span>
               </span>
@@ -95,22 +108,26 @@ export default function CommentInput({
         className="fixed bottom-0 left-0 w-full px-4 py-3 border-t
       border-neutral-800 bg-neutral-900 z-10"
       >
-        <form onSubmit={onSubmit} className="flex gap-4 items-center">
-          <input
+        <form onSubmit={onSubmit} className="flex gap-4 items-end">
+          <textarea
             required
             onChange={onChange}
             value={comment}
-            type="text"
+            rows={1}
             name="message"
             placeholder="댓글을 입력해주세요"
             autoComplete="off"
-            maxLength={140}
-            className="bg-neutral-800 rounded-full w-full h-12 
+            ref={textarea}
+            className="bg-neutral-800 rounded-2xl w-full h-[40px]
           focus:outline-none px-5 ring-1 transition border-none
           ring-neutral-800 focus:ring-neutral-700 placeholder:text-neutral-300"
           />
           <button>
-            <PaperAirplaneIcon className="size-10 text-neutral-400 transition-colors hover:text-orange-300" />
+            <PaperAirplaneIcon
+              className={`size-10 ${
+                comment.length === 0 ? "text-neutral-400" : "text-orange-400"
+              } transition-colors hover:text-orange-300`}
+            />
           </button>
         </form>
       </div>
