@@ -1,8 +1,8 @@
 import { formatToWon } from "@/lib/utils";
 import ProductLikeButton from "./product-like-button";
 import Link from "next/link";
-import { ProductType } from "@/app/(products)/products/[id]/page";
 import { notFound } from "next/navigation";
+import { ProductType } from "@/app/(products)/products/[id]/actions";
 
 interface ProductFootbarProps {
   isLiked: boolean;

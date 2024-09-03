@@ -1,4 +1,4 @@
-import ModalCloseButton from "@/components/modal-close-button";
+import ModalCloseButton from "@/components/common/modal-close-button";
 import db from "@/lib/db";
 import { formatToTimeAgo, formatToWon } from "@/lib/utils";
 import { PhotoIcon, UserIcon } from "@heroicons/react/24/solid";

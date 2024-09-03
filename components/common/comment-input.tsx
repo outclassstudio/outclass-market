@@ -1,7 +1,6 @@
 "use client";
 
-import { saveComment } from "@/app/posts/[id]/actions";
-import { InitialComments } from "@/app/posts/[id]/page";
+import { InitialComments, saveComment } from "@/app/posts/[id]/actions";
 import { formatToTimeAgo } from "@/lib/utils";
 import {
   ChatBubbleOvalLeftIcon,

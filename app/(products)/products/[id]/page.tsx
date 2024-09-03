@@ -1,70 +1,16 @@
 import ProductFootbar from "@/components/product/product-footbar";
-import ProductLikeButton from "@/components/product/product-like-button";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
-import { Prisma } from "@prisma/client";
 import { unstable_cache as nextCache } from "next/cache";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-
-async function getIsOwner(userId: number) {
-  const session = await getSession();
-  if (session.id) {
-    return session.id === userId;
-  }
-  return false;
-}
-
-async function getProduct(id: number) {
-  const product = await db.product.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      user: {
-        select: {
-          username: true,
-          avatar: true,
-        },
-      },
-      ChatRoom: {
-        include: {
-          users: true,
-        },
-      },
-      _count: {
-        select: {
-          ProductLike: true,
-        },
-      },
-    },
-  });
-  return product;
-}
-
-export type ProductType = Prisma.PromiseReturnType<typeof getProduct>;
+import { getIsOwner, getLikeStatus, getProduct } from "./actions";
 
 //todo 캐싱전략 고민
-const getCashedProduct = nextCache(getProduct, ["product-detail"], {
-  tags: ["products"],
-});
-
-async function getLikeStatus(productId: number, userId: number) {
-  const isLiked = await db.productLike.findUnique({
-    where: {
-      id: {
-        productId,
-        userId,
-      },
-    },
-  });
-  return {
-    isLiked: Boolean(isLiked),
-  };
-}
+// const getCashedProduct = nextCache(getProduct, ["product-detail"], {
+//   tags: ["products"],
+// });
 
 function getCachedLikeStatus(productId: number, userId: number) {
   const getCached = nextCache(getLikeStatus, ["product-like-status"], {
@@ -124,7 +70,7 @@ export default async function ProductDetail({
   const { isLiked } = await getCachedLikeStatus(id, session.id!);
 
   return (
-    <div className="h-screen my-auto">
+    <div className="h-screen my-auto mb-8">
       <div className="relative aspect-square">
         <Image
           fill
@@ -155,12 +101,15 @@ export default async function ProductDetail({
           <h1 className="text-2xl font-semibold">{product.title}</h1>
           <p>{product.description}</p>
         </div>
-        <div className="flex gap-3">
-          <div className="flex gap-1 text-neutral-400 text-sm">
+        <div
+          className="flex gap-2 
+          *:flex *:gap-1 *:text-neutral-400 *:text-sm"
+        >
+          <div>
             <span>채팅</span>
             <span>{product.ChatRoom.length}</span>
           </div>
-          <div className="flex gap-1 text-neutral-400 text-sm">
+          <div>
             <span>관심</span>
             <span>{product._count.ProductLike}</span>
           </div>

@@ -5,6 +5,7 @@ import { revalidateTag } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import fs from "fs/promises";
 import { productSchema } from "@/app/(products)/add/schema";
+import { Prisma } from "@prisma/client";
 
 export async function editProduct(prevState: any, formData: FormData) {
   const data = {
@@ -45,3 +46,22 @@ export async function editProduct(prevState: any, formData: FormData) {
     redirect(`/products/${id}`);
   }
 }
+
+export async function getProduct(id: number) {
+  const product = await db.product.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+          avatar: true,
+        },
+      },
+    },
+  });
+  return product;
+}
+
+export type EditProductType = Prisma.PromiseReturnType<typeof getProduct>;

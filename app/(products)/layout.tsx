@@ -1,4 +1,4 @@
-import ProductHeader from "@/components/product-header";
+import ProductHeader from "@/components/product/product-header";
 
 export default function ProductDetailLayout({
   children,
