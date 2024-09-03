@@ -43,7 +43,7 @@ export default async function Life() {
         href="/posts/add"
         className="bg-orange-500 flex items-center justify-center 
         rounded-full size-16 fixed bottom-24 right-8 text-white
-        transition-colors hover:bg-orange-400"
+        transition-colors hover:bg-orange-400 shadow-lg shadow-neutral-800"
       >
         <PencilSquareIcon className="size-9" />
       </Link>

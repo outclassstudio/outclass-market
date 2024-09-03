@@ -1,4 +1,4 @@
-import Button from "@/components/button";
+import Button from "@/components/common/button";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";

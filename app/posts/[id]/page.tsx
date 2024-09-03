@@ -1,46 +1,18 @@
-import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToTimeAgo } from "@/lib/utils";
 import { EyeIcon, UserIcon } from "@heroicons/react/24/solid";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import LikeButton from "@/components/like-button";
-import CommentInput from "@/components/comment-input";
-import { Prisma } from "@prisma/client";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
+import LikeButton from "@/components/life/like-button";
+import CommentInput from "@/components/common/comment-input";
+import PostHeader from "@/components/life/post-header";
+import { getComments, getLikeStatus, getPost } from "./actions";
+import { getUserProfile } from "@/lib/user";
 
-async function getPost(id: number) {
-  try {
-    const post = await db.post.update({
-      where: {
-        id,
-      },
-      data: {
-        views: {
-          increment: 1,
-        },
-      },
-      include: {
-        user: {
-          select: {
-            username: true,
-            avatar: true,
-          },
-        },
-        _count: {
-          select: {
-            comments: true,
-          },
-        },
-      },
-    });
-    return post;
-  } catch (e) {
-    return null;
-  }
-}
+export const metadata = {
+  title: "포스트",
+};
 
 //todo 고쳐야함
 // const getCachedPost = nextCache(getPost, ["post-detail"], {
@@ -48,74 +20,11 @@ async function getPost(id: number) {
 //   revalidate: 60,
 // });
 
-async function getLikeStatus(postId: number, userId: number) {
-  const isLiked = await db.like.findUnique({
-    where: {
-      id: {
-        postId,
-        userId,
-      },
-    },
-  });
-  const likeCount = await db.like.count({
-    where: {
-      postId,
-    },
-  });
-  return {
-    likeCount,
-    isLiked: Boolean(isLiked),
-  };
-}
-
 function getCachedLikeStatus(postId: number, userId: number) {
   const getCached = nextCache(getLikeStatus, ["post-like-status"], {
     tags: [`like-status-${postId}`],
   });
   return getCached(postId, userId);
-}
-
-async function getComments(postId: number, sort = true) {
-  const comments = await db.comment.findMany({
-    where: {
-      postId,
-    },
-    select: {
-      id: true,
-      payload: true,
-      created_at: true,
-      userId: true,
-      postId: true,
-      user: {
-        select: {
-          avatar: true,
-          username: true,
-        },
-      },
-    },
-    // orderBy: {
-    //   created_at: sort ? "desc" : "asc",
-    // },
-  });
-
-  return comments;
-}
-
-export type InitialComments = Prisma.PromiseReturnType<typeof getComments>;
-
-//todo 공용으로
-async function getUserProfile() {
-  const session = await getSession();
-  const user = await db.user.findUnique({
-    where: {
-      id: session.id,
-    },
-    select: {
-      username: true,
-      avatar: true,
-    },
-  });
-  return user;
 }
 
 export default async function PostDetail({
@@ -125,7 +34,6 @@ export default async function PostDetail({
 }) {
   //todo 세션 반복 호출에 대한 고민과 대책
   const session = await getSession();
-
   const id = Number(params.id);
   if (isNaN(id)) return notFound();
 
@@ -137,24 +45,9 @@ export default async function PostDetail({
   const user = await getUserProfile();
   if (!user) return notFound();
 
-  // const sortDesc = async () => {
-  //   "use server";
-  //   comments = await getComments(id, true);
-  // };
-  // const sortAsc = async () => {
-  //   "use server";
-  //   comments = await getComments(id, false);
-  // };
-
   return (
-    <div className="text-white px-5 sm:px-3">
-      <div className="flex justify-between items-center w-full py-4">
-        <div className="flex gap-3 items-center">
-          <Link href="/life" className="text-white">
-            <ChevronLeftIcon className="size-6" />
-          </Link>
-        </div>
-      </div>
+    <div className="text-white px-5 sm:px-3 mt-16">
+      <PostHeader url={"life"} />
       <div className="flex items-center gap-2 mb-6">
         {post.user.avatar ? (
           <Image

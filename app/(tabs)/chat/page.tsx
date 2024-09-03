@@ -4,6 +4,10 @@ import getSession from "@/lib/session";
 import { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
 
+export const metadata = {
+  title: "채팅",
+};
+
 async function getChatRooms() {
   const session = await getSession();
 

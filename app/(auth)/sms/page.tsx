@@ -1,7 +1,7 @@
 "use client";
 
-import Input from "@/components/input";
-import Button from "@/components/button";
+import Input from "@/components/common/input";
+import Button from "@/components/common/button";
 import { useFormState } from "react-dom";
 import { smsLogion } from "./actions";
 

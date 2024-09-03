@@ -1,31 +1,13 @@
 import db from "@/lib/db";
 import { unstable_cache as nextCache } from "next/cache";
 import { notFound } from "next/navigation";
-import EditForm from "./edit-form";
-import { Prisma } from "@prisma/client";
+import { getProduct } from "./action";
+import EditForm from "@/components/product/edit/edit-form";
 
-async function getProduct(id: number) {
-  const product = await db.product.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      user: {
-        select: {
-          username: true,
-          avatar: true,
-        },
-      },
-    },
-  });
-  return product;
-}
-
-export type EditProductType = Prisma.PromiseReturnType<typeof getProduct>;
-
-const getCashedProduct = nextCache(getProduct, ["product-detail"], {
-  tags: ["product-detail"],
-});
+//todo 캐싱전략
+// const getCashedProduct = nextCache(getProduct, ["product-detail"], {
+//   tags: ["product-detail"],
+// });
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getProduct(+params.id);
@@ -42,7 +24,8 @@ export default async function EditProductDetail({
   const id = Number(params.id);
   if (isNaN(id)) return notFound();
 
-  const product = await getCashedProduct(id);
+  const product = await getProduct(id);
+  // const product = await getCashedProduct(id);
   if (!product) return notFound();
 
   return <EditForm product={product} id={id} />;

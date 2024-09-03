@@ -1,5 +1,8 @@
 import { formatToTimeAgo, formatToWon } from "@/lib/utils";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleLeftRightIcon,
+  HeartIcon,
+} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,6 +14,7 @@ interface ListProductProps {
   photo: string;
   _count: {
     ProductLike: number;
+    ChatRoom: number;
   };
 }
 
@@ -37,9 +41,22 @@ export default function ListProduct({
           {formatToTimeAgo(created_at.toString())}
         </div>
         <span className="text-lg font-semibold">{formatToWon(price)}원</span>
-        <div className="w-full flex justify-end items-center gap-1 *:text-neutral-400">
-          <HeartIcon className="size-4" />
-          <span>{_count.ProductLike}</span>
+        <div
+          className="w-full flex justify-end items-center gap-3 *:text-neutral-400
+        *:flex *:gap-1 *:items-center"
+        >
+          <div>
+            <HeartIcon className="size-4" />
+            <span>{_count.ProductLike}</span>
+          </div>
+          {_count.ChatRoom ? (
+            <div>
+              <ChatBubbleLeftRightIcon className="size-4" />
+              <span>{_count.ChatRoom}</span>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </Link>
