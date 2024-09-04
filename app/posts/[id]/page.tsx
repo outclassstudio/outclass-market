@@ -5,10 +5,10 @@ import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import LikeButton from "@/components/life/like-button";
-import CommentInput from "@/components/common/comment-input";
 import PostHeader from "@/components/life/post-header";
 import { getComments, getLikeStatus, getPost } from "./actions";
 import { getUserProfile } from "@/lib/user";
+import CommentsList from "@/components/life/comment/comments-list";
 
 export const metadata = {
   title: "포스트",
@@ -91,7 +91,7 @@ export default async function PostDetail({
           <button className={`font-thin`}>최신순</button>
         </div>
       </div>
-      <CommentInput
+      <CommentsList
         initialComments={comments}
         userId={session.id!}
         postId={post.id}
