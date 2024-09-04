@@ -4,6 +4,7 @@ import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { Prisma } from "@prisma/client";
 import { revalidateTag } from "next/cache";
+import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 
 const payloadSchema = z.string().max(140, "댓글은 140자까지 가능해요");
@@ -137,6 +138,34 @@ export const dislikePost = async (postId: number) => {
       },
     });
     revalidateTag(`like-status-${postId}`);
+  } catch (e) {}
+};
+
+export const editComment = async (
+  commentId: number,
+  payload: string,
+  postId: number
+) => {
+  try {
+    await db.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        payload,
+      },
+    });
+  } catch (e) {}
+  // redirect(`/posts/${postId}`);
+};
+
+export const deleteComment = async (commentId: number) => {
+  try {
+    await db.comment.delete({
+      where: {
+        id: commentId,
+      },
+    });
   } catch (e) {}
 };
 

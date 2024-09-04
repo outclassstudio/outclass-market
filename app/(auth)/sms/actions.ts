@@ -2,7 +2,6 @@
 
 import { z } from "zod";
 import validator from "validator";
-import { redirect } from "next/navigation";
 import db from "@/lib/db";
 import crypto from "crypto";
 import { Login } from "@/lib/login";
@@ -145,7 +144,6 @@ export const smsLogion = async (prevState: ActionState, formData: FormData) => {
           id: token!.id,
         },
       });
-      redirect("/profile");
     }
   }
 };
