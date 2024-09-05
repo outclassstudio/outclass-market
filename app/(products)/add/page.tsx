@@ -4,7 +4,7 @@ import Button from "@/components/common/button";
 import Input from "@/components/common/input";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import { uploadProduct } from "./actions";
+import { getUploadUrl, uploadProduct } from "./actions";
 import { useFormState } from "react-dom";
 // import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,12 +12,13 @@ import { useFormState } from "react-dom";
 
 export default function AddProduct() {
   const [preview, setPreview] = useState("");
+  const [uploadUrl, setUploadUrl] = useState("");
+  const [photoId, setPhotoId] = useState("");
   // const { register, handleSubmit } = useForm<ProductType>({
   //   resolver: zodResolver(productSchema),
   // });
-  const [state, action] = useFormState(uploadProduct, null);
 
-  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { files },
     } = event;
@@ -27,11 +28,33 @@ export default function AddProduct() {
     const file = files[0];
     const url = URL.createObjectURL(file);
     setPreview(url);
+    const { success, result } = await getUploadUrl();
+    if (success) {
+      const { id, uploadURL } = result;
+      setUploadUrl(uploadURL);
+      setPhotoId(id);
+    }
   };
 
-  // const interceptionAction = handleSubmit(async () => {
-
-  // })
+  const interceptAction = async (_: any, formData: FormData) => {
+    const file = formData.get("photo");
+    if (!file) {
+      return;
+    }
+    const cloudflareForm = new FormData();
+    cloudflareForm.append("file", file);
+    const response = await fetch(uploadUrl, {
+      method: "post",
+      body: cloudflareForm,
+    });
+    if (response.status !== 200) {
+      return;
+    }
+    const photoUrl = `https://imagedelivery.net/BeIKmnUeqh2uGk7c6NSanA/${photoId}`;
+    formData.set("photo", photoUrl);
+    return uploadProduct(_, formData);
+  };
+  const [state, action] = useFormState(interceptAction, null);
 
   return (
     <div>

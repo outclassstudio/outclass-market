@@ -33,7 +33,12 @@ export default function ListProduct({
       last:border-none w-full"
     >
       <div className="relative size-28 rounded-md overflow-hidden">
-        <Image fill src={photo} alt={title} className="object-cover" />
+        <Image
+          fill
+          src={`${photo}/width=150,height=150`}
+          alt={title}
+          className="object-cover"
+        />
       </div>
       <div className="flex flex-col gap-1 w-[75%] *:text-white">
         <div className="text-lg">{title}</div>
