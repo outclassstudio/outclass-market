@@ -4,7 +4,6 @@ import getSession from "@/lib/session";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { unstable_cache as NextCache } from "next/cache";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -49,12 +48,9 @@ export default async function Profile() {
       <Suspense fallback={"Hello"}>
         <div className="flex items-center gap-3 p-2 w-full justify-start">
           {user?.avatar ? (
-            <Image
-              src={user.avatar}
-              alt=""
-              width={64}
-              height={64}
-              className="rounded-full overflow-hidden"
+            <div
+              className="w-24 h-24 rounded-full m-2 overflow-hidden bg-center bg-cover"
+              style={{ backgroundImage: `url(${user?.avatar}/avatar)` }}
             />
           ) : (
             <UserIcon className="size-16" />

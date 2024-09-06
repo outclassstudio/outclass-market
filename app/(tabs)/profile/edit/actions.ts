@@ -16,7 +16,7 @@ const usernameSchema = z
   .trim()
   .toLowerCase();
 
-export async function SaveProfile(username: string, avatar?: string) {
+export async function saveProfile(username: string, avatar?: string) {
   const session = await getSession();
 
   const result = usernameSchema.safeParse(username);
