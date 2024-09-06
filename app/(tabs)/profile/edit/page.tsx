@@ -24,9 +24,5 @@ export default async function EditProfile() {
   const user = await getUserData();
   if (!user) return notFound();
 
-  return (
-    <div>
-      <ProfileEditInput user={user} />
-    </div>
-  );
+  return <ProfileEditInput user={user} />;
 }

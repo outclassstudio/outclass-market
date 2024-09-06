@@ -7,7 +7,8 @@ import { redirect } from "next/navigation";
 import { productSchema } from "./schema";
 import { revalidateTag } from "next/cache";
 
-export async function uploadProduct(_: any, formData: FormData) {
+// export async function uploadProduct(_: any, formData: FormData) {
+export async function uploadProduct(formData: FormData) {
   const data = {
     title: formData.get("title"),
     price: formData.get("price"),
