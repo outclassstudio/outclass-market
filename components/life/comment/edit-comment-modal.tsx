@@ -2,10 +2,9 @@
 
 import { editComment } from "@/app/posts/[id]/actions";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface EditModalProps {
+interface EditCommentModalProps {
   handleEditModalClose: () => void;
   commentId: number;
   payload: string;
@@ -17,7 +16,7 @@ export default function EditCommentModal({
   commentId,
   payload,
   postId,
-}: EditModalProps) {
+}: EditCommentModalProps) {
   const [comment, setComment] = useState(payload);
 
   const handleEditComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
