@@ -5,17 +5,15 @@ import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface EditModalProps {
-  commentId: number;
-  payload: string;
-  postId: number;
-}
-
 export default function EditComment({
   commentId,
   payload,
   postId,
-}: EditModalProps) {
+}: {
+  commentId: number;
+  payload: string;
+  postId: number;
+}) {
   const [comment, setComment] = useState(payload);
   const router = useRouter();
 
