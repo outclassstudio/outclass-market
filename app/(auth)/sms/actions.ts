@@ -6,6 +6,7 @@ import db from "@/lib/db";
 import crypto from "crypto";
 import { Login } from "@/lib/login";
 import twilio from "twilio";
+import { redirect } from "next/navigation";
 
 const phoneScheme = z
   .string()
@@ -144,6 +145,8 @@ export const smsLogion = async (prevState: ActionState, formData: FormData) => {
           id: token!.id,
         },
       });
+
+      redirect("/profile");
     }
   }
 };
