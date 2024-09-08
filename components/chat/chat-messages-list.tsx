@@ -91,11 +91,11 @@ export default function ChatMessagesList({
         >
           {userId === message.userId ? null : message.user.avatar ? (
             <Image
-              src={message.user.avatar!}
+              src={`${message.user.avatar!}/avatar`}
               alt={message.user.username}
               width={40}
               height={40}
-              className="rounded-full overflow-hidden"
+              className="rounded-full size-10 overflow-hidden"
             />
           ) : (
             <UserIcon className="size-10" />

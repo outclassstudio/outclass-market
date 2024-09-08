@@ -3,6 +3,8 @@ import ProductLikeButton from "./product-like-button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductType } from "@/app/(products)/products/[id]/actions";
+import Button from "../common/button";
+import ProductButton from "./product-button";
 
 interface ProductFootbarProps {
   isLiked: boolean;
@@ -52,12 +54,13 @@ export default function ProductFootbar({
         ) : null}
         {isOwner ? null : (
           <form action={createChatRoom}>
-            <button
+            {/* <button
               className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
         text-white font-semibold"
             >
               채팅하기
-            </button>
+            </button> */}
+            <ProductButton text="채팅하기" />
           </form>
         )}
       </div>

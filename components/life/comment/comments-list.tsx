@@ -42,7 +42,14 @@ export default function CommentsList({
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newId = comments[comments.length - 1].id + 1;
+    let newId: number;
+    console.log(comments);
+    if (comments.length !== 0) {
+      newId = comments[comments.length - 1].id + 1;
+    } else {
+      newId = 1;
+    }
+
     setComments((prevMsg) => [
       ...prevMsg,
       {

@@ -53,7 +53,7 @@ export default async function PostDetail({
           <Image
             width={28}
             height={28}
-            src={post.user.avatar!}
+            src={`${post.user.avatar!}/avatar`}
             alt={post.user.username}
             className="size-7 rounded-full"
           />
