@@ -50,7 +50,13 @@ export default function SingleComment({
     <div className="flex gap-3">
       <div className="pt-1">
         {comment.user.avatar ? (
-          <Image src={comment.user.avatar} alt="" width={28} height={28} />
+          <Image
+            src={`${comment.user.avatar}/avatar`}
+            alt=""
+            width={28}
+            height={28}
+            className="size-7 rounded-full"
+          />
         ) : (
           <UserCircleIcon className="size-8" />
         )}

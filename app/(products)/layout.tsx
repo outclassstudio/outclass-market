@@ -7,8 +7,8 @@ export default function ProductDetailLayout({
 }) {
   return (
     <div>
-      <ProductHeader />
-      <div className="mt-[60px]">{children}</div>
+      <ProductHeader title={""} />
+      <div className="mt-[10px]">{children}</div>
     </div>
   );
 }

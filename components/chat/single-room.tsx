@@ -55,11 +55,11 @@ export default async function SingleRoom({
     >
       {avatarUser.avatar ? (
         <Image
-          src={avatarUser.avatar}
+          src={`${avatarUser.avatar!}/avatar`}
           alt=""
           width={40}
           height={40}
-          className="rounded-full overflow-hidden"
+          className="rounded-full size-10 overflow-hidden"
         />
       ) : (
         <UserIcon className="size-10" />
