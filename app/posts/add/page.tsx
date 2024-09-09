@@ -10,7 +10,7 @@ import PostInput from "@/components/life/post-input";
 
 export default function AddPost() {
   const [preview, setPreview] = useState("");
-  const [state, action] = useFormState(uploadPost, null);
+  const [state, dispatch] = useFormState(uploadPost, null);
 
   const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -26,7 +26,7 @@ export default function AddPost() {
 
   return (
     <div>
-      <form action={action} className="flex flex-col gap-5 p-5">
+      <form action={dispatch} className="flex flex-col gap-5 p-5">
         <label
           htmlFor="photo"
           className="border-2 aspect-square flex flex-col items-center justify-center 

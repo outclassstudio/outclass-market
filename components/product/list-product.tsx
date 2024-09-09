@@ -13,8 +13,8 @@ interface ListProductProps {
   created_at: Date;
   photo: string;
   _count: {
-    ProductLike: number;
-    ChatRoom: number;
+    productLikes: number;
+    chatrooms: number;
   };
 }
 
@@ -52,12 +52,12 @@ export default function ListProduct({
         >
           <div>
             <HeartIcon className="size-4" />
-            <span>{_count.ProductLike}</span>
+            <span>{_count.productLikes}</span>
           </div>
-          {_count.ChatRoom ? (
+          {_count.chatrooms ? (
             <div>
               <ChatBubbleLeftRightIcon className="size-4" />
-              <span>{_count.ChatRoom}</span>
+              <span>{_count.chatrooms}</span>
             </div>
           ) : (
             ""

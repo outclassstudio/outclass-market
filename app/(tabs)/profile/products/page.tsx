@@ -18,8 +18,8 @@ async function getInitialProducts(userId: number) {
       photo: true,
       _count: {
         select: {
-          ProductLike: true,
-          ChatRoom: true,
+          productLikes: true,
+          chatrooms: true,
         },
       },
     },

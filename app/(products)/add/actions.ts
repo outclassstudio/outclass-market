@@ -1,13 +1,11 @@
 "use server";
 
-import fs from "fs/promises";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
 import { productSchema } from "./schema";
 import { revalidateTag } from "next/cache";
 
-// export async function uploadProduct(_: any, formData: FormData) {
 export async function uploadProduct(formData: FormData) {
   const data = {
     title: formData.get("title"),
@@ -15,13 +13,6 @@ export async function uploadProduct(formData: FormData) {
     description: formData.get("description"),
     photo: formData.get("photo"),
   };
-
-  //! 이미지 파일을 로컬에 저장
-  // if (data.photo instanceof File) {
-  //   const photoData = await data.photo.arrayBuffer();
-  //   await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
-  //   data.photo = `/${data.photo.name}`;
-  // }
 
   //todo schema의 폴더를 변경할 필요가 있음
   const result = productSchema.safeParse(data);
@@ -48,6 +39,7 @@ export async function uploadProduct(formData: FormData) {
           id: true,
         },
       });
+
       revalidateTag("products");
       redirect(`/products/${product.id}`);
     }

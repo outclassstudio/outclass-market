@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 async function getInitialProducts(userId: number) {
   const products = await db.product.findMany({
     where: {
-      ProductLike: {
+      productLikes: {
         some: {
           userId,
         },
@@ -22,8 +22,8 @@ async function getInitialProducts(userId: number) {
       photo: true,
       _count: {
         select: {
-          ProductLike: true,
-          ChatRoom: true,
+          productLikes: true,
+          chatrooms: true,
         },
       },
     },

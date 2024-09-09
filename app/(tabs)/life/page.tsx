@@ -1,9 +1,14 @@
 import PostList from "@/components/life/post-list";
 import db from "@/lib/db";
-
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { Prisma } from "@prisma/client";
+import { unstable_cache as NextCache } from "next/cache";
 import Link from "next/link";
+
+const getCachedPosts = NextCache(getPosts, ["posts"], {
+  tags: ["posts"],
+  revalidate: 60,
+});
 
 async function getPosts() {
   const posts = await db.post.findMany({
@@ -34,7 +39,8 @@ export const metadata = {
 export type InitialPosts = Prisma.PromiseReturnType<typeof getPosts>;
 
 export default async function Life() {
-  const posts = await getPosts();
+  const posts = await getCachedPosts();
+  // const posts = await getPosts();
 
   return (
     <div>

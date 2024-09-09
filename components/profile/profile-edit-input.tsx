@@ -23,9 +23,7 @@ export default function ProfileEditInput({ user }: ProfileEditInputProps) {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username) {
-      if (!file && username === user?.username) {
-        setErrors(["같은 닉네임이에요"]);
-      } else {
+      if (avatarID !== USER_ICON_ID) {
         const cloudflareForm = new FormData();
         cloudflareForm.append("file", file!);
         const response = await fetch(avatarURL, {
@@ -35,11 +33,12 @@ export default function ProfileEditInput({ user }: ProfileEditInputProps) {
         if (response.status !== 200) {
           return;
         }
-        const photoUrl = `https://imagedelivery.net/BeIKmnUeqh2uGk7c6NSanA/${avatarID}`;
-        const result = await saveProfile(username, photoUrl);
-        if (result) {
-          setErrors(result.formErrors);
-        }
+      }
+
+      const photoUrl = `https://imagedelivery.net/BeIKmnUeqh2uGk7c6NSanA/${avatarID}`;
+      const result = await saveProfile(username, photoUrl);
+      if (result) {
+        setErrors(result.formErrors);
       }
     } else {
       setErrors(["빈칸이에요"]);
@@ -70,8 +69,9 @@ export default function ProfileEditInput({ user }: ProfileEditInputProps) {
   };
 
   const changeToUserIcon = () => {
+    if (preview === USER_ICON_URL) return;
     setAvatarID(USER_ICON_ID);
-    setPreview(USER_ICON_URL);
+    setPreview(`${USER_ICON_URL}/width=150,height=150`);
   };
 
   return (
@@ -111,7 +111,7 @@ export default function ProfileEditInput({ user }: ProfileEditInputProps) {
       text-sm hover:text-neutral-100"
         onClick={changeToUserIcon}
       >
-        이미지삭제
+        이미지 삭제
       </div>
       <div className="w-full flex flex-col gap-2">
         <div>닉네임</div>

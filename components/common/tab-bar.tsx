@@ -40,7 +40,7 @@ export default function TabBar() {
           <OutlineNewspaperIcon className="w-7 h-7" />
         )}
 
-        <span>동네생활</span>
+        <span>포스트</span>
       </Link>
       <Link className="flex flex-col items-center gap-px" href="/chat">
         {pathname === "/chat" ? (
@@ -67,7 +67,7 @@ export default function TabBar() {
           <OutlineUserIcon className="w-7 h-7" />
         )}
 
-        <span>나의 당근</span>
+        <span>유저정보</span>
       </Link>
     </div>
   );
