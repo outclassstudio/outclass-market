@@ -1,17 +1,18 @@
 "use client";
 
+import { getUploadUrl } from "@/app/(products)/add/actions";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
-export default function EditPhoto({
-  url,
-  name,
-}: {
+interface EditPhotoProps {
   url: string;
   name: string;
-}) {
+}
+
+export default function EditPhoto({ url, name }: EditPhotoProps) {
   const [preview, setPreview] = useState(url);
-  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { files },
     } = event;
@@ -27,7 +28,7 @@ export default function EditPhoto({
     <>
       <label
         htmlFor="photo"
-        className="mt-[80px] border-2 aspect-square flex flex-col items-center justify-center 
+        className="mt-[30px] border-2 aspect-square flex flex-col items-center justify-center 
   text-neutral-300 border-neutral-300 rounded-md border-dashed cursor-pointer
   bg-center bg-cover m-5"
         style={{

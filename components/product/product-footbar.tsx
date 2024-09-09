@@ -3,8 +3,8 @@ import ProductLikeButton from "./product-like-button";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductType } from "@/app/(products)/products/[id]/actions";
-import Button from "../common/button";
 import ProductButton from "./product-button";
+import ProductDeleteButton from "./product-delete-button";
 
 interface ProductFootbarProps {
   isLiked: boolean;
@@ -32,17 +32,14 @@ export default function ProductFootbar({
           {formatToWon(product.price)}원
         </span>
       </div>
-
       <div className="flex gap-2 sm:gap-3.5">
         {isOwner ? (
           <>
-            <Link
-              href={`/delete/${product.id}`}
-              className="bg-red-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
-        text-white font-semibold"
-            >
-              삭제하기
-            </Link>
+            <ProductDeleteButton
+              text="삭제하기"
+              color="red-500"
+              productId={product.id}
+            />
             <Link
               href={`/edit/product/${product.id}`}
               className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
@@ -54,13 +51,7 @@ export default function ProductFootbar({
         ) : null}
         {isOwner ? null : (
           <form action={createChatRoom}>
-            {/* <button
-              className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
-        text-white font-semibold"
-            >
-              채팅하기
-            </button> */}
-            <ProductButton text="채팅하기" />
+            <ProductButton text="채팅하기" color="orange-500" />
           </form>
         )}
       </div>

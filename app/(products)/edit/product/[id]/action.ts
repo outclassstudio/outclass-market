@@ -3,9 +3,9 @@
 import db from "@/lib/db";
 import { revalidateTag } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import fs from "fs/promises";
 import { productSchema } from "@/app/(products)/add/schema";
 import { Prisma } from "@prisma/client";
+import { getUploadUrl } from "@/app/(products)/add/actions";
 
 export async function editProduct(prevState: any, formData: FormData) {
   const data = {
@@ -15,16 +15,30 @@ export async function editProduct(prevState: any, formData: FormData) {
     photo: formData.get("photo"),
   };
 
-  //! 이미지 파일을 로컬에 저장
   if (data.photo instanceof File) {
-    const photoData = await data.photo.arrayBuffer();
-    await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
-    data.photo = `/${data.photo.name}`;
+    if (data.photo.size) {
+      const { success, result } = await getUploadUrl();
+      if (success) {
+        const { id, uploadURL } = result;
+        const cloudflareForm = new FormData();
+        cloudflareForm.append("file", data.photo!);
+        const response = await fetch(uploadURL, {
+          method: "post",
+          body: cloudflareForm,
+        });
+        if (response.status !== 200) {
+          return;
+        }
+        const photoUrl = `https://imagedelivery.net/BeIKmnUeqh2uGk7c6NSanA/${id}`;
+        data.photo = photoUrl;
+      }
+    } else {
+      data.photo = "/undefined";
+    }
   }
 
-  const result = productSchema.safeParse(data);
-
-  if (!result.success) {
+  const parseResult = productSchema.safeParse(data);
+  if (!parseResult.success) {
     return notFound();
   } else {
     const { id } = await db.product.update({
@@ -32,11 +46,13 @@ export async function editProduct(prevState: any, formData: FormData) {
         id: prevState,
       },
       data: {
-        title: result.data.title,
-        description: result.data.description,
-        price: result.data.price,
+        title: parseResult.data.title,
+        description: parseResult.data.description,
+        price: parseResult.data.price,
         photo:
-          result.data.photo === "/undefined" ? undefined : result.data.photo,
+          parseResult.data.photo === "/undefined"
+            ? undefined
+            : parseResult.data.photo,
       },
       select: {
         id: true,
@@ -62,6 +78,19 @@ export async function getProduct(id: number) {
     },
   });
   return product;
+}
+
+export async function deleteProduct(id: number) {
+  try {
+    await db.product.delete({
+      where: {
+        id,
+      },
+    });
+    revalidateTag("products");
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export type EditProductType = Prisma.PromiseReturnType<typeof getProduct>;

@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { postSchema } from "./schema";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { revalidateTag } from "next/cache";
 
 export async function uploadPost(prev: any, formData: FormData) {
   const data = {
@@ -32,6 +33,7 @@ export async function uploadPost(prev: any, formData: FormData) {
       },
     });
 
+    revalidateTag("posts");
     redirect(`/posts/${post.id}`);
   }
 }

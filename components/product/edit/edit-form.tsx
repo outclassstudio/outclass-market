@@ -8,8 +8,9 @@ import { useFormState } from "react-dom";
 import {
   editProduct,
   EditProductType,
-} from "../../../app/(products)/edit/product/[id]/action";
+} from "@/app/(products)/edit/product/[id]/action";
 import EditPhoto from "@/components/product/edit/edit-photo";
+import ProductButton from "../product-button";
 
 export default function EditForm({
   product,
@@ -19,12 +20,11 @@ export default function EditForm({
   id: number;
 }) {
   const [state, dispatch] = useFormState(editProduct, id);
-
   if (!product) return notFound();
 
   return (
     <form action={dispatch} className="h-screen my-auto">
-      <EditPhoto name="photo" url={product.photo} />
+      <EditPhoto name="photo" url={`${product.photo}/avatar`} />
       <div className="flex flex-col px-5 pb-[90px]">
         <div className="pb-5 px-1.5 flex items-center gap-3 border-b border-e-neutral-700">
           <div className="size-10 overflow-hidden rounded-full">
@@ -32,7 +32,7 @@ export default function EditForm({
               <Image
                 width={40}
                 height={40}
-                src={product.user.avatar}
+                src={`${product.user.avatar}/avatar`}
                 alt={product.user.username}
               />
             ) : (
@@ -58,12 +58,7 @@ export default function EditForm({
           <EditInput name={"price"} value={product.price.toString()} />
         </span>
         <div className="flex gap-2 sm:gap-3.5">
-          <button
-            className="bg-orange-500 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
-    text-white font-semibold"
-          >
-            수정완료
-          </button>
+          <ProductButton text="수정완료" color="orange-500" />
         </div>
       </div>
     </form>

@@ -1,6 +1,6 @@
 export default function Looading() {
   return (
-    <div className="flex flex-col gap-5 animate-pulse">
+    <div className="flex flex-col gap-5 animate-pulse p-5">
       {[...Array(10)].map((_, index) => (
         <div key={index} className="*:rounded-md flex gap-5">
           <div className="size-28  bg-neutral-700 " />

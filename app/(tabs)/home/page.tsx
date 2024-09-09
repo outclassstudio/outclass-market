@@ -14,6 +14,8 @@ export const metadata = {
   title: "홈",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function Products() {
   //todo 캐싱전략 수정 필요
   const initialProducts = await getCashedProducts();

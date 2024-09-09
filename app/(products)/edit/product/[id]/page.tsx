@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+// import db from "@/lib/db";
 import { unstable_cache as nextCache } from "next/cache";
 import { notFound } from "next/navigation";
 import { getProduct } from "./action";
@@ -31,14 +31,14 @@ export default async function EditProductDetail({
   return <EditForm product={product} id={id} />;
 }
 
-export async function generateStaticParams() {
-  const products = await db.product.findMany({
-    select: {
-      id: true,
-    },
-  });
+// export async function generateStaticParams() {
+//   const products = await db.product.findMany({
+//     select: {
+//       id: true,
+//     },
+//   });
 
-  return products.map((product) => ({
-    id: product.id.toString(),
-  }));
-}
+//   return products.map((product) => ({
+//     id: product.id.toString(),
+//   }));
+// }

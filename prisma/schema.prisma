@@ -9,23 +9,23 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  username    String        @unique
-  email       String?       @unique
-  password    String?
-  phone       String?       @unique
-  github_id   String?       @unique
-  avatar      String?
-  created_at  DateTime      @default(now())
-  updated_at  DateTime      @updatedAt
-  tokens      SMSToken[]
-  products    Product[]
-  posts       Post[]
-  comments    Comment[]
-  likes       Like[]
-  messages    Message[]
-  chatRooms   ChatRoom[]
-  ProductLike ProductLike[]
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
+  email        String?       @unique
+  password     String?
+  phone        String?       @unique
+  github_id    String?       @unique
+  avatar       String?       @default("https://imagedelivery.net/BeIKmnUeqh2uGk7c6NSanA/ea161177-57a1-4e62-270a-47ad302a0900")
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  tokens       SMSToken[]
+  products     Product[]
+  posts        Post[]
+  comments     Comment[]
+  likes        Like[]
+  messages     Message[]
+  chatRooms    ChatRoom[]
+  productLikes ProductLike[]
 }
 
 model SMSToken {
@@ -38,17 +38,17 @@ model SMSToken {
 }
 
 model Product {
-  id          Int           @id @default(autoincrement())
-  title       String
-  price       Float
-  description String
-  photo       String
-  created_at  DateTime      @default(now())
-  updated_at  DateTime      @updatedAt
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  ChatRoom    ChatRoom[]
-  ProductLike ProductLike[]
+  id           Int           @id @default(autoincrement())
+  title        String
+  price        Float
+  description  String
+  photo        String
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  chatrooms    ChatRoom[]
+  productLikes ProductLike[]
 }
 
 model Post {
@@ -101,7 +101,7 @@ model Message {
   payload    String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  room       ChatRoom @relation(fields: [chatRoomId], references: [id])
+  room       ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
   user       User     @relation(fields: [userId], references: [id])
   chatRoomId String
   userId     Int
@@ -110,8 +110,8 @@ model Message {
 model ProductLike {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user       User     @relation(fields: [userId], references: [id])
-  product    Product  @relation(fields: [productId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   userId     Int
   productId  Int
 

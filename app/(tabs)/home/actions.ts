@@ -13,8 +13,8 @@ export async function getMoreProducts(page: number) {
       photo: true,
       _count: {
         select: {
-          ProductLike: true,
-          ChatRoom: true,
+          productLikes: true,
+          chatrooms: true,
         },
       },
     },
@@ -37,8 +37,8 @@ export async function getInitialProducts() {
       photo: true,
       _count: {
         select: {
-          ProductLike: true,
-          ChatRoom: true,
+          productLikes: true,
+          chatrooms: true,
         },
       },
     },

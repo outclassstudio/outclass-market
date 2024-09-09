@@ -8,9 +8,9 @@ import { notFound, redirect } from "next/navigation";
 import { getIsOwner, getLikeStatus, getProduct } from "./actions";
 
 //todo 캐싱전략 고민
-// const getCashedProduct = nextCache(getProduct, ["product-detail"], {
-//   tags: ["products"],
-// });
+const getCashedProduct = nextCache(getProduct, ["product-detail"], {
+  tags: ["products", "user-profile"],
+});
 
 function getCachedLikeStatus(productId: number, userId: number) {
   const getCached = nextCache(getLikeStatus, ["product-like-status"], {
@@ -34,14 +34,14 @@ export default async function ProductDetail({
   const id = Number(params.id);
   if (isNaN(id)) return notFound();
 
-  // const product = await getCashedProduct(id);
-  const product = await getProduct(id);
+  const product = await getCashedProduct(id);
+  // const product = await getProduct(id);
   if (!product) return notFound();
 
   const isOwner = await getIsOwner(product.userId);
 
   const session = await getSession();
-  const existRoom = product.ChatRoom.filter(
+  const existRoom = product.chatrooms.filter(
     (room) => room.users[1].id === session.id
   );
 
@@ -107,11 +107,11 @@ export default async function ProductDetail({
         >
           <div>
             <span>채팅</span>
-            <span>{product.ChatRoom.length}</span>
+            <span>{product.chatrooms.length}</span>
           </div>
           <div>
             <span>관심</span>
-            <span>{product._count.ProductLike}</span>
+            <span>{product._count.productLikes}</span>
           </div>
         </div>
       </div>
@@ -125,14 +125,14 @@ export default async function ProductDetail({
   );
 }
 
-export async function generateStaticParams() {
-  const products = await db.product.findMany({
-    select: {
-      id: true,
-    },
-  });
+// export async function generateStaticParams() {
+//   const products = await db.product.findMany({
+//     select: {
+//       id: true,
+//     },
+//   });
 
-  return products.map((product) => ({
-    id: product.id.toString(),
-  }));
-}
+//   return products.map((product) => ({
+//     id: product.id.toString(),
+//   }));
+// }

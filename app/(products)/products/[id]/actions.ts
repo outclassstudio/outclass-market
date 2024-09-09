@@ -25,18 +25,19 @@ export async function getProduct(id: number) {
           avatar: true,
         },
       },
-      ChatRoom: {
+      chatrooms: {
         include: {
           users: true,
         },
       },
       _count: {
         select: {
-          ProductLike: true,
+          productLikes: true,
         },
       },
     },
   });
+
   return product;
 }
 
