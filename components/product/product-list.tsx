@@ -13,7 +13,8 @@ export default function ProductList({ initialProducts }: ProductsProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLastPage, setIsLastPage] = useState(false);
   const [page, setPage] = useState(0);
-  const trigger = useRef<HTMLSpanElement>(null);
+  const trigger = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       async (
@@ -36,8 +37,8 @@ export default function ProductList({ initialProducts }: ProductsProps) {
         }
       },
       {
-        threshold: 1.0,
-        rootMargin: "0px 0px -100px 0px",
+        threshold: 0.1,
+        rootMargin: "0px 0px -78px 0px",
       }
     );
     if (trigger.current) {
@@ -50,18 +51,19 @@ export default function ProductList({ initialProducts }: ProductsProps) {
   }, [page]);
 
   return (
-    <div className="p-5 flex flex-col gap-5">
+    <div className="p-5 flex flex-col gap-5 mb-20">
       {products.map((product) => (
         <ListProduct key={product.id} {...product} />
       ))}
       {isLastPage ? null : (
-        <span
+        <div
           ref={trigger}
-          className="mb-40 ext-sm font-semibold bg-orange-500 w-fix mx-auto 
-      px-3 py-2 rounded-md hover:opacity-90 active:scale-95"
+          //     className="mb-40 text-sm font-semibold bg-orange-500 w-fix mx-auto
+          // px-3 py-2 rounded-md hover:opacity-90 active:scale-95"
+          className="bg-transparent text-transparent"
         >
           {isLoading ? "로딩중" : "더 가져오기"}
-        </span>
+        </div>
       )}
     </div>
   );

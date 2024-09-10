@@ -31,11 +31,11 @@ export default function EditCommentModal({
   return (
     <div
       className="fixed h-screen w-full top-0 left-0 flex flex-col z-20
-    animate-slideinY"
+    animate-slideinY bg-neutral-900 items-center"
     >
       <div
         className="flex justify-between items-center
-    w-full p-4 bg-neutral-900 border-b border-neutral-700"
+    w-full py-4 px-3 border-b border-neutral-700 sm:w-[640px]"
       >
         <div className="flex items-center" onClick={handleEditModalClose}>
           <ChevronLeftIcon className="size-6 cursor-pointer" />
@@ -48,7 +48,7 @@ export default function EditCommentModal({
       <textarea
         value={comment}
         onChange={handleEditComment}
-        className="h-full bg-neutral-900 p-4
+        className="h-full bg-neutral-900 p-4 w-full sm:w-[640px]
         border-none focus:border-none focus:ring-0"
       />
     </div>

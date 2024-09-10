@@ -1,52 +1,66 @@
+"use client";
+
 import { InitialPosts } from "@/app/(tabs)/life/page";
-import { formatToTimeAgo } from "@/lib/utils";
-import {
-  ChatBubbleBottomCenterIcon,
-  HandThumbUpIcon,
-} from "@heroicons/react/24/outline";
-import { PhotoIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
+import SinglePostBox from "./single-post-box";
+import { useEffect, useRef, useState } from "react";
+import { getMorePosts } from "@/app/(tabs)/life/actions";
 
 interface PostsListProps {
-  posts: InitialPosts;
+  initialPosts: InitialPosts;
 }
 
-export default function PostList({ posts }: PostsListProps) {
+export default function PostList({ initialPosts }: PostsListProps) {
+  const [posts, setPosts] = useState(initialPosts);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLastPage, setIsLastPage] = useState(false);
+  const [page, setPage] = useState(0);
+  const trigger = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      async (
+        entries: IntersectionObserverEntry[],
+        observer: IntersectionObserver
+      ) => {
+        const element = entries[0];
+        if (element.isIntersecting && trigger.current) {
+          observer.unobserve(trigger.current);
+          setIsLoading(true);
+          const newPosts = await getMorePosts(page + 1);
+
+          if (newPosts.length) {
+            setPage((prev) => prev + 1);
+            setPosts((prev) => [...prev, ...newPosts]);
+          } else {
+            setIsLastPage(true);
+          }
+          setIsLoading(false);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -78px 0px",
+      }
+    );
+    if (trigger.current) {
+      observer.observe(trigger.current);
+    }
+    //clean-up function
+    return () => {
+      observer.disconnect();
+    };
+  }, [page]);
+
   return (
-    <div className="p-5 flex flex-col">
+    <div className="p-5 flex flex-col mb-20">
       {posts.map((post) => (
-        <Link
-          key={post.id}
-          href={`/posts/${post.id}`}
-          className="pb-5 mb-5 border-b border-neutral-500 text-neutral-400
-          flex gap-5 last:pb-0 last:border-b-0 items-center"
-        >
-          <div className="flex flex-col gap-2 w-full">
-            <h2 className="text-white text-xl font-semibold">{post.title}</h2>
-            <p>{post.description}</p>
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex gap-4 items-center">
-                <span>{formatToTimeAgo(post.created_at.toString())}</span>
-                <span>.</span>
-                <span>조회 {post.views}</span>
-              </div>
-              <div
-                className="flex gap-4 items-center 
-            *:flex *:items-center *:gap-1"
-              >
-                <span>
-                  <HandThumbUpIcon className="size-4" />
-                  {post._count.likes}
-                </span>
-                <span>
-                  <ChatBubbleBottomCenterIcon className="size-4" />
-                  {post._count.comments}
-                </span>
-              </div>
-            </div>
-          </div>
-        </Link>
+        <SinglePostBox key={post.id} post={post} />
       ))}
+      {isLastPage ? null : (
+        <div ref={trigger} className="bg-transparent text-transparent">
+          {isLoading ? "로딩중" : "더 가져오기"}
+        </div>
+      )}
     </div>
   );
 }
