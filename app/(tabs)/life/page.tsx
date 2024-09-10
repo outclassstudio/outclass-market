@@ -1,5 +1,4 @@
 import PostList from "@/components/life/post-list";
-import db from "@/lib/db";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { Prisma } from "@prisma/client";
 import { unstable_cache as NextCache } from "next/cache";

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import { TextareaHTMLAttributes } from "react";
 
 interface InputProps {
   name: string;
@@ -9,10 +9,10 @@ export default function PostInput({
   name,
   errors = [],
   ...rest
-}: InputProps & InputHTMLAttributes<HTMLInputElement>) {
+}: InputProps & TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <div className="flex flex-col gap-2">
-      <input
+      <textarea
         name={name}
         className="bg-transparent rounded-md w-full transition
         h-32 focus:outline-none ring-2 focus:ring-4 ring-neutral-200

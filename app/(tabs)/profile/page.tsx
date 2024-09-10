@@ -64,8 +64,8 @@ export default async function Profile() {
       </Suspense>
       <Link
         href="/profile/edit"
-        className="bg-neutral-500 text-white w-full p-2
-        rounded-lg flex justify-center text-lg font-semibold"
+        className="bg-neutral-500 text-white w-full h-10 
+        rounded-lg flex justify-center items-center text-lg font-semibold"
       >
         프로필 수정
       </Link>

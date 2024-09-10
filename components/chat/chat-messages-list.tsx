@@ -133,7 +133,7 @@ export default function ChatMessagesList({
           placeholder:text-neutral-400"
         />
         <button className="absolute right-2">
-          <ArrowUpCircleIcon className="size-10 text-orange-500 transition-colors hover:text-orange-300" />
+          <ArrowUpCircleIcon className="size-10 text-orange-600 transition-colors hover:text-orange-400" />
         </button>
       </form>
     </div>

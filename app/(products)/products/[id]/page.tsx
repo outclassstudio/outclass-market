@@ -97,12 +97,12 @@ export default async function ProductDetail({
             <h3>{product.user.username}</h3>
           </div>
         </div>
-        <div className="py-5 px-1.5">
+        <div className="py-5 px-1.5 flex flex-col gap-3">
           <h1 className="text-2xl font-semibold">{product.title}</h1>
           <p>{product.description}</p>
         </div>
         <div
-          className="flex gap-2 
+          className="flex gap-2 px-2
           *:flex *:gap-1 *:text-neutral-400 *:text-sm"
         >
           <div>
