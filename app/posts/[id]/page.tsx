@@ -5,7 +5,6 @@ import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import LikeButton from "@/components/life/like-button";
-import PostHeader from "@/components/life/post-header";
 import { getComments, getLikeStatus, getPost } from "./actions";
 import { getUserProfile } from "@/lib/user";
 import CommentsList from "@/components/life/comment/comments-list";
@@ -46,8 +45,7 @@ export default async function PostDetail({
   if (!user) return notFound();
 
   return (
-    <div className="text-white px-5 sm:px-3 mt-16">
-      <PostHeader url={"life"} />
+    <div className="text-white px-5 py-3 sm:px-3">
       <div className="flex items-center gap-2 mb-6">
         {post.user.avatar ? (
           <Image

@@ -40,7 +40,7 @@ export default function EditCommentModal({
         <div className="flex items-center" onClick={handleEditModalClose}>
           <ChevronLeftIcon className="size-6 cursor-pointer" />
         </div>
-        <div className="font-semibold">댓글 수정</div>
+        <div className="font-semibold text-lg">댓글 수정</div>
         <div className="cursor-pointer" onClick={handleSaveComment}>
           완료
         </div>
