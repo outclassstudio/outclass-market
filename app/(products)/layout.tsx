@@ -1,4 +1,4 @@
-import ProductHeader from "@/components/product/product-header";
+import SimpleHeader from "@/components/common/simple-header";
 
 export default function ProductDetailLayout({
   children,
@@ -7,8 +7,8 @@ export default function ProductDetailLayout({
 }) {
   return (
     <div>
-      <ProductHeader title={""} />
-      <div className="mt-[10px]">{children}</div>
+      <SimpleHeader url="home" text="" />
+      <div className="mt-[50px]">{children}</div>
     </div>
   );
 }

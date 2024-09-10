@@ -3,7 +3,7 @@ import getSession from "@/lib/session";
 import { getUserProfile } from "@/lib/user";
 import { notFound } from "next/navigation";
 import { getMessages, getRoom } from "./actions";
-import PostHeader from "@/components/life/post-header";
+import SimpleHeader from "@/components/common/simple-header";
 
 export default async function ChatRoom({ params }: { params: { id: string } }) {
   const room = await getRoom(params.id);
@@ -16,8 +16,7 @@ export default async function ChatRoom({ params }: { params: { id: string } }) {
 
   return (
     <>
-      {/* 임시 헤더 */}
-      <PostHeader url={"chat"} />
+      <SimpleHeader url={"chat"} text="채팅" />
       <ChatMessagesList
         chatRoomId={params.id}
         initialMessages={initialMessages}
