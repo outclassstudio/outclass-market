@@ -23,8 +23,8 @@ export default function ProductFootbar({
 
   return (
     <div
-      className="fixed left-0 bottom-0 w-full p-5 bg-neutral-800 
-      flex justify-between items-center"
+      className="fixed bottom-0 w-full bg-neutral-800 
+      flex justify-between items-center sm:w-[640px] p-4 sm:p-5"
     >
       <div className="flex items-center gap-3">
         <ProductLikeButton isLiked={isLiked} productId={product.id} />

@@ -19,9 +19,12 @@ export default function CommentInput({
   return (
     <div
       className="fixed bottom-0 left-0 w-full px-4 py-3 border-t
-border-neutral-800 bg-neutral-900 z-10"
+border-neutral-800 bg-neutral-900 z-10 flex justify-center"
     >
-      <form onSubmit={onSubmit} className="flex gap-4 items-end">
+      <form
+        onSubmit={onSubmit}
+        className="flex justify-center gap-4 items-end w-full sm:w-[640px]"
+      >
         <textarea
           required
           onChange={onChange}

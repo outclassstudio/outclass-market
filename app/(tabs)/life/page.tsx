@@ -4,47 +4,26 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { Prisma } from "@prisma/client";
 import { unstable_cache as NextCache } from "next/cache";
 import Link from "next/link";
+import { getPosts } from "./actions";
 
 const getCachedPosts = NextCache(getPosts, ["posts"], {
   tags: ["posts"],
   revalidate: 60,
 });
 
-async function getPosts() {
-  const posts = await db.post.findMany({
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      views: true,
-      created_at: true,
-      _count: {
-        select: {
-          comments: true,
-          likes: true,
-        },
-      },
-    },
-    orderBy: {
-      created_at: "desc",
-    },
-  });
-  return posts;
-}
-
 export const metadata = {
-  title: "동네생활",
+  title: "포스트",
 };
 
 export type InitialPosts = Prisma.PromiseReturnType<typeof getPosts>;
 
 export default async function Life() {
-  const posts = await getCachedPosts();
+  const initialPosts = await getCachedPosts();
   // const posts = await getPosts();
 
   return (
     <div>
-      <PostList posts={posts} />
+      <PostList initialPosts={initialPosts} />
       <Link
         href="/posts/add"
         className="bg-orange-500 flex items-center justify-center 

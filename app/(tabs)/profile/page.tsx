@@ -30,6 +30,10 @@ const getCachedUser = NextCache(getUser, ["user-profile"], {
   tags: ["user-profile", "products"],
 });
 
+export const metadata = {
+  title: "유저정보",
+};
+
 export default async function Profile() {
   const session = await getSession();
   if (!session) return notFound();

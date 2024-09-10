@@ -18,8 +18,8 @@ export async function getMoreProducts(page: number) {
         },
       },
     },
-    skip: page * 1,
-    take: 1,
+    skip: 6 * page,
+    take: 6,
     orderBy: {
       created_at: "desc",
     },
@@ -42,7 +42,7 @@ export async function getInitialProducts() {
         },
       },
     },
-    take: 1,
+    take: 6,
     orderBy: {
       created_at: "desc",
     },
