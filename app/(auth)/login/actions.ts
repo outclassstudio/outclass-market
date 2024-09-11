@@ -31,7 +31,7 @@ const formSchema = z.object({
     .email()
     .trim()
     .toLowerCase()
-    .refine(checkEmailExist, "존재하지 않은 이메일이에요"),
+    .refine(checkEmailExist, "존재하지 않는 이메일이에요"),
   password: z
     .string({
       required_error: "비밀번호를 입력하세요",

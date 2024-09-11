@@ -7,6 +7,7 @@ import { useState } from "react";
 import ProfileHeader from "./profile-header";
 import { getUploadUrl } from "@/app/(products)/add/actions";
 import { USER_ICON_ID, USER_ICON_URL } from "@/lib/constants";
+import Link from "next/link";
 
 interface ProfileEditInputProps {
   user: GetUserData;
@@ -128,6 +129,13 @@ export default function ProfileEditInput({ user }: ProfileEditInputProps) {
           </span>
         ))}
       </div>
+      <Link
+        href="/profile/signout"
+        className="text-red-600 w-full h-10 mt-3 hover:text-red-400
+        rounded-lg flex justify-center items-center text-lg font-semibold"
+      >
+        계정삭제
+      </Link>
     </form>
   );
 }

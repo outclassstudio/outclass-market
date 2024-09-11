@@ -16,6 +16,9 @@ export default function CommentInput({
   onSubmit,
   textarea,
 }: CommentInputProps) {
+  //todo 엔터로 제출하기 구현
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {};
+
   return (
     <div
       className="fixed bottom-0 left-0 w-full px-4 py-3 border-t
@@ -27,6 +30,7 @@ border-neutral-800 bg-neutral-900 z-10 flex justify-center"
       >
         <textarea
           required
+          onKeyDown={onKeyDown}
           onChange={onChange}
           value={comment}
           rows={1}
@@ -41,8 +45,8 @@ border-neutral-800 bg-neutral-900 z-10 flex justify-center"
         <button>
           <PaperAirplaneIcon
             className={`size-10 ${
-              comment.length === 0 ? "text-neutral-400" : "text-orange-400"
-            } transition-colors hover:text-orange-300`}
+              comment.length === 0 ? "text-neutral-400" : "text-orange-500"
+            } transition-colors hover:text-orange-400`}
           />
         </button>
       </form>
