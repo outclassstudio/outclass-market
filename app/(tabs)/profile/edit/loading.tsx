@@ -15,6 +15,7 @@ export default function ProfileEditLoading() {
           <div className="w-10 h-5" />
           <div className="w-full h-10" />
         </div>
+        <div className="mt-5 w-16 h-5 rounded-md bg-neutral-700" />
       </div>
     </div>
   );
