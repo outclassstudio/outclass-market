@@ -43,7 +43,7 @@ export default function CommentsList({
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let newId: number;
-    console.log(comments);
+
     if (comments.length !== 0) {
       newId = comments[comments.length - 1].id + 1;
     } else {
@@ -68,13 +68,31 @@ export default function CommentsList({
     setComment("");
   };
 
+  const onDelete = (id: number) => {
+    const newComments = comments.filter((comment) => comment.id !== id);
+    setComments(newComments);
+  };
+
   return (
     <div className="flex flex-col gap-5 mb-[90px]">
+      <div className="flex justify-between items-center mb-4">
+        <div className="font-semibold">
+          댓글
+          <span className="text-neutral-300 ml-1 font-normal">
+            {comments.length}
+          </span>
+        </div>
+        <div className="flex gap-3 *:cursor-pointer">
+          <button className={`font-thin`}>등록순</button>
+          <button className={`font-thin`}>최신순</button>
+        </div>
+      </div>
       {comments.map((comment) => (
         <SingleComment
           key={comment.id}
           comment={comment}
           userId={userId}
+          onDelete={onDelete}
           postUserId={postUserId}
         />
       ))}

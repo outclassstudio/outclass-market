@@ -26,12 +26,14 @@ interface SingleCommentProps {
   };
   userId: number;
   postUserId: number;
+  onDelete: (id: number) => void;
 }
 
 export default function SingleComment({
   comment,
   userId,
   postUserId,
+  onDelete,
 }: SingleCommentProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -99,9 +101,9 @@ export default function SingleComment({
       </div>
       {isModalOpen ? (
         <CommentMenu
+          onDelete={onDelete}
           setIsEdit={setIsModalOpen}
           commentId={comment.id}
-          postId={comment.postId}
           handleEditModalOpen={handleEditModalOpen}
         />
       ) : (
