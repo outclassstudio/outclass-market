@@ -77,18 +77,6 @@ export default async function PostDetail({
         <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id} />
       </div>
       <div className="border-2 border-neutral-700 my-6" />
-      <div className="flex justify-between items-center mb-4">
-        <div className="font-semibold">
-          댓글
-          <span className="text-neutral-300 ml-1 font-normal">
-            {comments.length}
-          </span>
-        </div>
-        <div className="flex gap-3 *:cursor-pointer">
-          <button className={`font-thin`}>등록순</button>
-          <button className={`font-thin`}>최신순</button>
-        </div>
-      </div>
       <CommentsList
         initialComments={comments}
         userId={session.id!}
