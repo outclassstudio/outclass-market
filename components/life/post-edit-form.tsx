@@ -5,17 +5,35 @@ import Input from "@/components/common/input";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useFormState } from "react-dom";
-import { uploadPost } from "./action";
+// import { uploadPost } from "./action";
 import Textarea from "@/components/common/textarea";
+import { InitialPostType } from "@/app/posts/edit/[id]/page";
+import { notFound } from "next/navigation";
 
-export default function AddPost() {
+interface PostEditProps {
+  initialPost: InitialPostType;
+}
+
+export default function PostEditForm({ initialPost }: PostEditProps) {
+  if (!initialPost) return notFound();
+
+  const [title, setTitle] = useState(initialPost.title);
+  const [content, setContent] = useState(initialPost.description);
   const [preview, setPreview] = useState("");
-  const [state, dispatch] = useFormState(uploadPost, null);
+  // const [state, dispatch] = useFormState(uploadPost, null);
 
-  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  };
+
+  const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { files },
-    } = event;
+    } = e;
     if (!files) {
       return;
     }
@@ -24,8 +42,10 @@ export default function AddPost() {
     setPreview(url);
   };
 
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {};
+
   return (
-    <form action={dispatch} className="flex flex-col gap-5 p-5">
+    <form className="flex flex-col gap-5 p-5" onSubmit={onSubmit}>
       <input
         onChange={onImageChange}
         type="file"
@@ -36,19 +56,23 @@ export default function AddPost() {
       <div className="flex flex-col gap-3">
         <div className="font-bold text-neutral-200">제목</div>
         <Input
-          name="title"
           type="text"
+          name="title"
+          value={title}
           required
           placeholder="제목"
+          onChange={onTitleChange}
           // errors={state?.fieldErrors.title}
         />
       </div>
       <div className="flex flex-col gap-3">
         <div className="font-bold text-neutral-200">내용</div>
         <Textarea
-          name="post"
+          name="content"
+          value={content!}
           required
           placeholder="내용"
+          onChange={onContentChange}
           // errors={state?.fieldErrors.description}
         />
       </div>
