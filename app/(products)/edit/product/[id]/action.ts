@@ -82,12 +82,16 @@ export async function getProduct(id: number) {
 
 export async function deleteProduct(id: number) {
   try {
-    await db.product.delete({
+    const result = await db.product.delete({
       where: {
         id,
       },
+      select: {
+        id: true,
+      },
     });
     revalidateTag("products");
+    return result;
   } catch (e) {
     console.log(e);
   }

@@ -1,32 +1,43 @@
 "use client";
 
-import Button from "@/components/common/button";
 import Input from "@/components/common/input";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import { useFormState } from "react-dom";
-// import { uploadPost } from "./action";
 import Textarea from "@/components/common/textarea";
 import { InitialPostType } from "@/app/posts/edit/[id]/page";
 import { notFound } from "next/navigation";
+import { editPost } from "@/app/posts/edit/[id]/actions";
+import { useRouter } from "next/navigation";
 
 interface PostEditProps {
   initialPost: InitialPostType;
 }
 
 export default function PostEditForm({ initialPost }: PostEditProps) {
+  const [title, setTitle] = useState(initialPost?.title);
+  const [content, setContent] = useState(initialPost?.description);
+  const [preview, setPreview] = useState("");
+  const [isTitleBlank, setIsTitleBlank] = useState(false);
+  const [isContentBlank, setIsContentBlank] = useState(false);
+  const [pending, setPendig] = useState(false);
+  const router = useRouter();
   if (!initialPost) return notFound();
 
-  const [title, setTitle] = useState(initialPost.title);
-  const [content, setContent] = useState(initialPost.description);
-  const [preview, setPreview] = useState("");
-  // const [state, dispatch] = useFormState(uploadPost, null);
-
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "") {
+      setIsTitleBlank(true);
+    } else {
+      setIsTitleBlank(false);
+    }
     setTitle(e.target.value);
   };
 
   const onContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (e.target.value === "") {
+      setIsContentBlank(true);
+    } else {
+      setIsContentBlank(false);
+    }
     setContent(e.target.value);
   };
 
@@ -42,7 +53,16 @@ export default function PostEditForm({ initialPost }: PostEditProps) {
     setPreview(url);
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {};
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (title && content) {
+      setPendig(true);
+      const result = await editPost(initialPost.id, title, content);
+      if (result) {
+        router.push(`/posts/${initialPost.id}`);
+      }
+    }
+  };
 
   return (
     <form className="flex flex-col gap-5 p-5" onSubmit={onSubmit}>
@@ -54,7 +74,14 @@ export default function PostEditForm({ initialPost }: PostEditProps) {
         className="hidden"
       />
       <div className="flex flex-col gap-3">
-        <div className="font-bold text-neutral-200">제목</div>
+        <div className="flex gap-2 items-center">
+          <div className="font-bold text-neutral-200">제목</div>
+          {isTitleBlank ? (
+            <div className="text-red-500 text-sm">제목은 필수에요</div>
+          ) : (
+            ""
+          )}
+        </div>
         <Input
           type="text"
           name="title"
@@ -66,7 +93,14 @@ export default function PostEditForm({ initialPost }: PostEditProps) {
         />
       </div>
       <div className="flex flex-col gap-3">
-        <div className="font-bold text-neutral-200">내용</div>
+        <div className="flex gap-2 items-center">
+          <div className="font-bold text-neutral-200">내용</div>
+          {isContentBlank ? (
+            <div className="text-red-500 text-sm">내용은 필수에요</div>
+          ) : (
+            ""
+          )}
+        </div>
         <Textarea
           name="content"
           value={content!}
@@ -110,7 +144,14 @@ export default function PostEditForm({ initialPost }: PostEditProps) {
           {state?.fieldErrors.photo}
         </div> */}
       </div>
-      <Button text="작성 완료" />
+      <button
+        disabled={pending}
+        className="primary-btn h-10 
+    disabled:bg-neutral-400 disabled:text-neutral-300
+    disabled:cursor-not-allowed"
+      >
+        {pending ? "로딩중..." : "수정 완료"}
+      </button>
     </form>
   );
 }

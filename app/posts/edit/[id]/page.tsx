@@ -8,6 +8,7 @@ async function getPost(id: number) {
       id,
     },
     select: {
+      id: true,
       title: true,
       description: true,
     },
