@@ -9,6 +9,7 @@ import { getComments, getLikeStatus, getPost } from "./actions";
 import { getUserProfile } from "@/lib/user";
 import CommentsList from "@/components/life/comment/comments-list";
 import Link from "next/link";
+import PostEditMenu from "@/components/life/post-edit-menu";
 
 export const metadata = {
   title: "포스트",
@@ -73,22 +74,12 @@ export default async function PostDetail({
             onClick={handleModalOpen}
             className="size-5"
           /> */}
-        {post.userId === session.id ? (
-          <div className="*:text-neutral-400 flex gap-2 items-center *:cursor-pointer">
-            <Link
-              href={`/posts/edit/${post.id}`}
-              className="hover:text-neutral-200"
-            >
-              수정
-            </Link>
-            <span className="hover:text-red-500">삭제</span>
-          </div>
-        ) : (
-          ""
-        )}
+        {post.userId === session.id ? <PostEditMenu id={post.id} /> : ""}
       </div>
       <h2 className="text-2xl font-bold mb-4">{post.title}</h2>
-      <p className="mb-6">{post.description}</p>
+      <p className="mb-6 whitespace-pre-wrap leading-relaxed">
+        {post.description}
+      </p>
       <div className="flex flex-col gap-5 items-start mb-5">
         <div className="flex items-center gap-2 text-neutral-400 text-sm">
           <EyeIcon className="size-5" />

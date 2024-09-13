@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import DeleteProductModal from "./delete-product-modal";
+import DeleteConfirmModal from "../common/delete-confirm-modal";
+import { deleteProduct } from "@/app/(products)/edit/product/[id]/action";
+import { useRouter } from "next/navigation";
 
 interface ButtonProps {
   text: string;
@@ -17,15 +19,23 @@ export default function ProductDeleteButton({
 }: ButtonProps) {
   const { pending } = useFormStatus();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
 
-  const handleProductDelete = () => {
-    setIsModalOpen(true);
+  const handleModalOpen = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
+  const handleProductDelete = async () => {
+    const result = await deleteProduct(productId);
+    if (result) {
+      router.push("/home");
+    }
   };
 
   return (
     <>
       <button
-        onClick={handleProductDelete}
+        onClick={handleModalOpen}
         disabled={pending}
         className={`bg-${color} px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-md 
         text-white font-semibold disabled:bg-neutral-400 disabled:text-neutral-300
@@ -34,9 +44,9 @@ export default function ProductDeleteButton({
         {pending ? "로딩중..." : text}
       </button>
       {isModalOpen ? (
-        <DeleteProductModal
-          setIsModalOpen={setIsModalOpen}
-          productId={productId}
+        <DeleteConfirmModal
+          handleModalClose={handleModalOpen}
+          handleDelete={handleProductDelete}
         />
       ) : (
         ""
